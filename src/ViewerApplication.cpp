@@ -42,6 +42,9 @@ int ViewerApplication::run()
   const auto uLightIntensity =
       glGetUniformLocation(glslProgram.glId(), "uLightIntensity");
 
+  const auto uBaseColorTexture =
+      glGetUniformLocation(glslProgram.glId(), "uBaseColorTexture");
+
   tinygltf::Model model;
   if (!loadGltfFile(model)) {
     return -1;
