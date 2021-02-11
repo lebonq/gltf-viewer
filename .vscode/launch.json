@@ -64,13 +64,19 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "build/bin/gltf-viewer",
-      "args": [
-        ""
-      ],
+      "args": [],
       "stopAtEntry": false,
       "environment": [],
-      "externalConsole": true,
       "cwd": "${workspaceRoot}",
+      "console": "externalTerminal",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
     },
     {
       "name": "Display Info (Linux)",
@@ -82,8 +88,16 @@
       ],
       "stopAtEntry": false,
       "environment": [],
-      "externalConsole": true,
       "cwd": "${workspaceRoot}",
+      "console": "externalTerminal",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
     },
     {
       "name": "Viewer on Sponza (Linux)",
@@ -98,8 +112,16 @@
       ],
       "stopAtEntry": false,
       "environment": [],
-      "externalConsole": true,
       "cwd": "${workspaceRoot}",
+      "console": "externalTerminal",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
     },
     {
       "name": "Viewer on Helmet (Linux)",
@@ -112,8 +134,16 @@
       ],
       "stopAtEntry": false,
       "environment": [],
-      "externalConsole": true,
       "cwd": "${workspaceRoot}",
+      "console": "externalTerminal",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
     },
   ]
 }
