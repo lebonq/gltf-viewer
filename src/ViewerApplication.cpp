@@ -47,6 +47,13 @@ int ViewerApplication::run()
   const auto uBaseColorFactor =
       glGetUniformLocation(glslProgram.glId(), "uBaseColorFactor");
 
+  const auto uMetallicRoughnessTexture =
+      glGetUniformLocation(glslProgram.glId(), "uMetallicRoughnessTexture");
+  const auto uMetallicFactor =
+      glGetUniformLocation(glslProgram.glId(), "uMetallicFactor");
+  const auto uRoughnessFactor =
+      glGetUniformLocation(glslProgram.glId(), "uRoughnessFactor");
+
   tinygltf::Model model;
   if (!loadGltfFile(model)) {
     return -1;
@@ -131,6 +138,29 @@ int ViewerApplication::run()
         glBindTexture(GL_TEXTURE_2D, textureObject);
         glUniform1i(uBaseColorTexture, 0);
       }
+      if (uMetallicFactor >= 0) {
+        glUniform1f(
+            uMetallicFactor, (float)pbrMetallicRoughness.metallicFactor);
+      }
+      if (uRoughnessFactor >= 0) {
+        glUniform1f(
+            uRoughnessFactor, (float)pbrMetallicRoughness.roughnessFactor);
+      }
+      if (uMetallicRoughnessTexture >= 0) {
+        auto textureObject = 0u;
+        if (pbrMetallicRoughness.metallicRoughnessTexture.index >= 0) {
+          const auto &texture =
+              model.textures[pbrMetallicRoughness.metallicRoughnessTexture
+                                 .index];
+          if (texture.source >= 0) {
+            textureObject = textureObjects[texture.source];
+          }
+        }
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, textureObject);
+        glUniform1i(uMetallicRoughnessTexture, 1);
+      }
     } else {
       // Apply default material
       // Defined here:
@@ -144,8 +174,20 @@ int ViewerApplication::run()
         glBindTexture(GL_TEXTURE_2D, whiteTexture);
         glUniform1i(uBaseColorTexture, 0);
       }
+      if (uMetallicFactor >= 0) {
+        glUniform1f(uMetallicFactor, 1.f);
+      }
+      if (uRoughnessFactor >= 0) {
+        glUniform1f(uRoughnessFactor, 1.f);
+      }
+      if (uMetallicRoughnessTexture >= 0) {
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glUniform1i(uMetallicRoughnessTexture, 1);
+      }
     }
   };
+
   // Lambda function to draw the scene
   const auto drawScene = [&](const Camera &camera) {
     glViewport(0, 0, m_nWindowWidth, m_nWindowHeight);
