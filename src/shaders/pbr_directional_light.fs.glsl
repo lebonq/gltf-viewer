@@ -21,10 +21,14 @@ uniform vec4 uBaseColorFactor;
 uniform float uMetallicFactor;
 uniform float uRoughnessFactor;
 uniform vec3 uEmissiveFactor;
+uniform float uOcclusionStrength;
 
 uniform sampler2D uBaseColorTexture;
 uniform sampler2D uMetallicRoughnessTexture;
 uniform sampler2D uEmissiveTexture;
+uniform sampler2D uOcclusionTexture;
+
+uniform int uApplyOcclusion;
 
 out vec3 fColor;
 
@@ -112,6 +116,11 @@ void main()
 
   vec3 color = (f_diffuse + f_specular) * uLightIntensity * NdotL;
   color += emissive;
+
+  if (1 == uApplyOcclusion) {
+    float ao = texture2D(uOcclusionTexture, vTexCoords).r;
+    color = mix(color, color * ao, uOcclusionStrength);
+  }
 
   fColor = LINEARtoSRGB(color);
 }
