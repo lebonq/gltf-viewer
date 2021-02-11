@@ -321,7 +321,7 @@ bool ViewerApplication::loadGltfFile(tinygltf::Model &model)
 }
 
 std::vector<GLuint> ViewerApplication::createBufferObjects(
-    const tinygltf::Model &model)
+    const tinygltf::Model &model) const
 {
   std::vector<GLuint> bufferObjects(model.buffers.size(), 0);
 
@@ -338,7 +338,7 @@ std::vector<GLuint> ViewerApplication::createBufferObjects(
 
 std::vector<GLuint> ViewerApplication::createVertexArrayObjects(
     const tinygltf::Model &model, const std::vector<GLuint> &bufferObjects,
-    std::vector<VaoRange> &meshToVertexArrays)
+    std::vector<VaoRange> &meshToVertexArrays) const
 {
   std::vector<GLuint> vertexArrayObjects; // We don't know the size yet
 
