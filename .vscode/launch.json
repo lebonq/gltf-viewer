@@ -63,7 +63,7 @@
       "name": "Debug (Linux)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "build/bin/gltf-viewer",
+      "program": "${workspaceFolder}/build/bin/gltf-viewer",
       "args": [],
       "stopAtEntry": false,
       "environment": [],
@@ -82,7 +82,7 @@
       "name": "Display Info (Linux)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "build/bin/gltf-viewer",
+      "program": "${workspaceFolder}/build/bin/gltf-viewer",
       "args": [
         "info"
       ],
@@ -103,7 +103,7 @@
       "name": "Viewer on Sponza (Linux)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "build/bin/gltf-viewer",
+      "program": "${workspaceFolder}/build/bin/gltf-viewer",
       "args": [
         "viewer",
         "${workspaceFolder}/gltf-sample-models/2.0/Sponza/glTF/Sponza.gltf",
@@ -127,7 +127,7 @@
       "name": "Viewer on Helmet (Linux)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "build/bin/gltf-viewer",
+      "program": "${workspaceFolder}/build/bin/gltf-viewer",
       "args": [
         "viewer",
         "${workspaceFolder}/gltf-sample-models/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf"
