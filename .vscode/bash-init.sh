@@ -64,6 +64,7 @@ render_sponza() {
 render_helmet() {
   cmake_prepare
   cmake_install
+  [ ! -d output-images ] && mkdir output-images
   dist/gltf-viewer viewer gltf-sample-models/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf \
     --output output-images/helmet.png
 }
