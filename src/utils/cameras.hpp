@@ -188,7 +188,7 @@ private:
   glm::vec3 m_worldUpAxis;
 
   // Input event state
-  bool m_LeftButtonPressed = false;
+  bool m_MiddleButtonPressed = false;
   glm::dvec2 m_LastCursorPosition;
 
   // Current camera

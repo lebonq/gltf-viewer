@@ -29,17 +29,17 @@ ViewFrame fromViewToWorldMatrix(const mat4 &viewToWorldMatrix)
 bool FirstPersonCameraController::update(float elapsedTime)
 {
   if (glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_MIDDLE) &&
-      !m_LeftButtonPressed) {
-    m_LeftButtonPressed = true;
+      !m_MiddleButtonPressed) {
+    m_MiddleButtonPressed = true;
     glfwGetCursorPos(
         m_pWindow, &m_LastCursorPosition.x, &m_LastCursorPosition.y);
   } else if (!glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_MIDDLE) &&
-             m_LeftButtonPressed) {
-    m_LeftButtonPressed = false;
+             m_MiddleButtonPressed) {
+    m_MiddleButtonPressed = false;
   }
 
   const auto cursorDelta = ([&]() {
-    if (m_LeftButtonPressed) {
+    if (m_MiddleButtonPressed) {
       dvec2 cursorPosition;
       glfwGetCursorPos(m_pWindow, &cursorPosition.x, &cursorPosition.y);
       const auto delta = cursorPosition - m_LastCursorPosition;
