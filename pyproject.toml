@@ -46,6 +46,10 @@ colorama = "^0.4.4"
 poetry-version = "^0.2.0"
 simplejson = "^3.17.6"
 pendulum = "^2.1.2"
+gltf = "^0.7.18"
+PyOpenGL = "^3.1.5"
+imgui = {extras = ["glfw"], version = "^1.4.1"}
+PyGLM = "^2.5.7"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
