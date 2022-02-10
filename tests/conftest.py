@@ -45,12 +45,25 @@ def pytest_addoption(parser: Any) -> None:
         help="Run slow tests",
     )
 
+    parser.addoption(
+        "--run-opengl",
+        action="store_true",
+        default=False,
+        help="Run opengl tests",
+    )
+
 
 def pytest_collection_modifyitems(config: Config, items: List[Any]) -> None:
     if not config.getoption("--run-slow"):
         skipper = pytest.mark.skip(reason="Only run when --run-slow is given")
         for item in items:
             if "slow" in item.keywords:
+                item.add_marker(skipper)
+
+    if not config.getoption("--run-opengl"):
+        skipper = pytest.mark.skip(reason="Only run when --run-opengl is given")
+        for item in items:
+            if "opengl" in item.keywords:
                 item.add_marker(skipper)
 
 
