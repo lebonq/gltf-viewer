@@ -1,0 +1,14 @@
+*.imgui.ini
+build
+dist
+gltf-sample-models
+output-images
+
+.venv
+.local
+__pycache__
+*.pyc
+dist
+MANIFEST
+*.egg-info
+.nox

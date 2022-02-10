@@ -1,0 +1,86 @@
+[tool.pytest.ini_options]
+addopts = "--html=.local/test_report/report.html --cov --cov-config pyproject.toml --cov-report term --cov-report html --cov-report xml --junitxml .local/test_report/test_report.xml --typeguard-packages=gltf_viewer"
+junit_family = "xunit2"
+cache_dir = ".local/pytest_cache"
+asyncio_mode = "strict"
+
+[tool.coverage.run]
+branch = true
+source = ["gltf_viewer"]
+data_file = ".local/.coverage"
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = ["pragma: no cover", "if __name__ == .__main__.:", "if 0:", "if False:"]
+
+[tool.coverage.html]
+directory = ".local/test_report/coverage_html"
+
+[tool.coverage.xml]
+output = ".local/test_report/coverage.xml"
+
+[tool.isort]
+# This configuration is compatible with black
+# https://black.readthedocs.io/en/stable/compatible_configs.html#isort
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 1 # Force multi-line imports, to reduce merge conflict probability
+use_parentheses = true
+ensure_newline_before_comments = true
+line_length = 88
+
+[tool.poetry.scripts] # todo: remove the underscore after poetry init
+gltf-viewer = "gltf_viewer.__main__:app"
+
+[tool.poetry]
+name = "gltf-viewer"
+version = "0.1.0"
+description = ""
+authors = ["Celeborn2BeAlive <laurent.noel.c2ba@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+typer = "^0.4.0"
+python-dotenv = "^0.19.2"
+colorama = "^0.4.4"
+poetry-version = "^0.2.0"
+simplejson = "^3.17.6"
+pendulum = "^2.1.2"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+isort = "^5.10.1"
+flake8 = "^4.0.1"
+flake8-absolute-import = "^1.0.0"
+flake8-annotations = "^2.7.0"
+flake8-bandit = "^2.1.2"
+flake8-black = "^0.2.4"
+flake8-bugbear = "^22.1.11"
+flake8-builtins = "^1.5.3"
+flake8-comprehensions = "^3.8.0"
+flake8-eradicate = "^1.2.0"
+flake8-isort = "^4.1.1"
+flake8-pytest-style = "^1.6.0"
+pep8-naming = "^0.12.1"
+mypy = "^0.931"
+typeguard = "^2.13.3"
+types-colorama = "^0.4.8"
+types-simplejson = "^3.17.3"
+coverage = {extras = ["toml"], version = "^6.3.1"}
+freezegun = "^1.1.0"
+pytest = "^7.0.0"
+pytest-cov = "^3.0.0"
+pytest-mock = "^3.7.0"
+pytest-html = "^3.1.1"
+pytest-asyncio = "^0.18.0"
+pytest-subtests = "^0.6.0"
+pytest-xdist = "^2.5.0"
+deepdiff = "^5.7.0"
+debugpy = "^1.5.1"
+nox = "^2022.1.7"
+pre-commit = "^2.17.0"
+safety = "^1.10.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

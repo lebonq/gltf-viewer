@@ -1,0 +1,50 @@
+stages:
+  - qa
+  - release
+
+.python:
+  variables:
+    PYTHONVERSION: "3.9"
+  image: python:$PYTHONVERSION
+  tags:
+    - docker
+  before_script:
+    - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+    - export PATH=$HOME/.poetry/bin:$PATH
+    - poetry config virtualenvs.in-project true
+
+.nox:
+  stage: qa
+  extends: .python
+  variables:
+    NOXSESSION: "$JOB-$PYTHONVERSION"
+  script:
+    - poetry export --dev --format=requirements.txt --output=requirements.txt
+    - python -m pip install nox
+    - nox
+  cache:
+    paths:
+      - .nox
+
+qa:
+  extends: .nox
+  parallel:
+    matrix:
+      - JOB: [lint, safety, mypy]
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /\[skip-qa\]/
+
+tests:
+  extends: .nox
+  parallel:
+    matrix:
+      - JOB: [tests]
+  artifacts:
+    reports:
+      junit: .local/test_report/test_report.xml
+      cobertura: .local/test_report/coverage.xml
+  coverage: '/Total coverage: \d+\.\d+/'
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /\[skip-tests\]/

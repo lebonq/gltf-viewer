@@ -1,0 +1,24 @@
+[flake8]
+ignore = E203,E501,W503,S322,ANN101,ANN102,C901,PT012,S607,S603,S404
+# - E203 (Whitespace before ‘:') incompatible with black
+# - E501 is the default line length check, which is replaced by B950
+# - W503 (Line break before binary operator) incompatible with black
+# - S322 The input method in Python 2 will read from standard input, evaluate and run
+#     the resulting string as python source code. This is similar, though in many ways worse,
+#     then using eval. On Python 2, use raw_input instead, input is safe in Python 3.
+# - ANN001 Missing type annotation for self in method1
+# - ANN102 Missing type annotation for cls in classmethod1
+# - C901 Function is too complex
+# - PT012 pytest.raises() block should contain a single simple statement
+# - S607 Starting a process with a partial executable path
+# - S603 subprocess call - check for execution of untrusted input.
+# - S404 Consider possible security implications associated with subprocess module.
+per-file-ignores = __main__.py:B008,tests/*:S101
+# - B008 raises a warning when we call a function to define default argument values.
+#   This is what we do for typer Option and Argument, so we ignore B008 on files
+#   defining CLI commands.
+# - S101 (Use of assert detected...) is disabled on test source files because they use assert
+max-line-length = 80
+# black line-length is 88, B950 checks the maximum line length with 10% tolerance
+max-complexity = 10
+application-import-names = gltf_viewer,tests
