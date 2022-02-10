@@ -22,7 +22,8 @@ logger = get_logger("tests")
 
 
 @pytest.mark.opengl()
-def test_viewer_application() -> None:
+@pytest.mark.asyncio()
+async def test_viewer_application() -> None:
     app_path = Path()
     width = 1080
     height = 720
@@ -31,7 +32,10 @@ def test_viewer_application() -> None:
         width,
         height,
     )
-    assert app.run() == 0
+    runner_coroutine = app.run()
+    app.stop()
+
+    await runner_coroutine
 
 
 def test_invalid_args_for_viewer_application_raises() -> None:
@@ -77,13 +81,14 @@ class ViewerApplication:
         self.height = height
         self.glfw_handle = GLFWHandle(width, height, "glTF Viewer", True)
 
-    def run(self) -> int:
+    async def run(self) -> None:
         log_gl_info()
         while not self.glfw_handle.should_close():
             glfw.poll_events()
             self.glfw_handle.swap_buffers()
 
-        return 0
+    def stop(self) -> None:
+        self.glfw_handle.set_should_close(True)
 
 
 class GLFWHandle:
@@ -128,6 +133,9 @@ class GLFWHandle:
 
     def should_close(self) -> bool:
         return glfw.window_should_close(self.window)
+
+    def set_should_close(self, value: bool) -> None:
+        return glfw.set_window_should_close(self.window, value)
 
     def framebuffer_size(self) -> glm.ivec2:
         return glm.ivec2(*glfw.get_framebuffer_size(self.window))
