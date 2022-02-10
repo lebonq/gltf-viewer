@@ -35,10 +35,9 @@ logger = logging.getLogger(__name__)  # type: ignore
 @nox.session(python=["3.9"])
 def tests(session: Session) -> None:
     args = session.posargs or [
-        "--cov-fail-under",
-        "100",
         "-m",
         "not e2e",
+        "--run-opengl",
     ]
     session.run("poetry", "install", external=True)
     session.run("pytest", *args)
