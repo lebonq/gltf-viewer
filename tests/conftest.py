@@ -52,6 +52,13 @@ def pytest_addoption(parser: Any) -> None:
         help="Run opengl tests",
     )
 
+    parser.addoption(
+        "--interactive-opengl",
+        action="store_true",
+        default=False,
+        help="Wait for user interaction to stop opengl apps",
+    )
+
 
 def pytest_collection_modifyitems(config: Config, items: List[Any]) -> None:
     if not config.getoption("--run-slow"):

@@ -2,6 +2,9 @@ from __future__ import (
     annotations,
 )
 
+from dataclasses import (
+    dataclass,
+)
 from pathlib import (
     Path,
 )
@@ -11,8 +14,10 @@ from typing import (
 
 import glfw
 import glm
+import imgui
 import OpenGL.GL as gl  # noqa: N813
 import pytest
+from imgui.integrations.glfw import GlfwRenderer as ImGuiGlfwRenderer
 
 from gltf_viewer.utils.logging import (
     get_logger,
@@ -23,7 +28,9 @@ logger = get_logger("tests")
 
 @pytest.mark.opengl()
 @pytest.mark.asyncio()
-async def test_viewer_application() -> None:
+async def test_viewer_application(
+    request: pytest.FixtureRequest,
+) -> None:
     app_path = Path()
     width = 1080
     height = 720
@@ -33,7 +40,8 @@ async def test_viewer_application() -> None:
         height,
     )
     runner_coroutine = app.run()
-    app.stop()
+    if not request.config.getoption("--interactive-opengl"):
+        app.stop()
 
     await runner_coroutine
 
@@ -70,6 +78,7 @@ class ViewerApplication:
     width: int
     height: int
     glfw_handle: GLFWHandle
+    imgui_renderer: ImGuiGlfwRenderer
 
     def __init__(self, app_path: Path, width: int, height: int) -> None:
         if width <= 0:
@@ -81,11 +90,103 @@ class ViewerApplication:
         self.height = height
         self.glfw_handle = GLFWHandle(width, height, "glTF Viewer", True)
 
+        imgui.create_context()
+        imgui.get_io().ini_file_name = b".local/imgui.ini"
+        self.imgui_renderer = ImGuiGlfwRenderer(self.glfw_handle.window)
+
     async def run(self) -> None:
         log_gl_info()
+
+        gl.glEnable(gl.GL_DEPTH_TEST)
+
+        gui_window_is_open = True
+        gui_camera_collapsing_header_is_open = True
+
+        txt = ""
+
+        camera = Camera()
+        max_distance = 500
+        camera_controller = FirstPersonCameraController(
+            self.glfw_handle.window, 0.5 * max_distance
+        )
+
         while not self.glfw_handle.should_close():
-            glfw.poll_events()
+            seconds = glfw.get_time()
+
+            gl.glViewport(0, 0, self.width, self.height)
+            gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+
+            view_matrix = camera.get_view_matrix()
+
+            # draw scene here
+
+            imgui.new_frame()
+
+            if imgui.begin_main_menu_bar():
+                if imgui.begin_menu("File", True):
+
+                    clicked_quit, selected_quit = imgui.menu_item(
+                        "Quit", "Ctrl+Q", False, True
+                    )
+
+                    if clicked_quit:
+                        self.stop()
+
+                    imgui.end_menu()
+                imgui.end_main_menu_bar()
+
+            if gui_window_is_open:
+                _, gui_window_is_open = imgui.begin("GUI", closable=True)
+                imgui.text(
+                    f"Application average {1000 / imgui.get_io().framerate: .3f} ms/frame ({imgui.get_io().framerate: .1f} FPS)"
+                )
+
+                changed, txt = imgui.input_text("Amount", txt, 256)
+                imgui.text("You wrote:")
+                imgui.same_line()
+                imgui.text(txt)
+
+                if gui_camera_collapsing_header_is_open:
+                    (
+                        expended,
+                        gui_camera_collapsing_header_is_open,
+                    ) = imgui.collapsing_header(
+                        "Camera", gui_camera_collapsing_header_is_open
+                    )
+                    if expended:
+                        imgui.text(f"eye: {camera.eye.x} {camera.eye.y} {camera.eye.z}")
+                        imgui.text(
+                            f"center: {camera.center.x} {camera.center.y} {camera.center.z}"
+                        )
+                        imgui.text(f"up: {camera.up.x} {camera.up.y} {camera.up.z}")
+
+                        if imgui.button("Copy camera args to clipboard"):
+                            args = (
+                                f"--lookat {camera.eye.x},{camera.eye.y},{camera.eye.z},"
+                                f"{camera.center.x},{camera.center.y},{camera.center.z},"
+                                f"{camera.up.x},{camera.up.y},{camera.up.z}"
+                            )
+                            logger.info(args)
+                            glfw.set_clipboard_string(self.glfw_handle.window, args)
+                imgui.end()
+
+            imgui.render()
+            self.imgui_renderer.render(imgui.get_draw_data())
+
             self.glfw_handle.swap_buffers()
+
+            glfw.poll_events()
+            self.imgui_renderer.process_inputs()
+
+            gui_has_focus = (
+                imgui.get_io().want_capture_mouse
+                or imgui.get_io().want_capture_keyboard
+            )
+            if not gui_has_focus:
+                ellapsed_time = glfw.get_time() - seconds
+                camera = camera_controller.update(ellapsed_time)
+
+        self.imgui_renderer.shutdown()
 
     def stop(self) -> None:
         self.glfw_handle.set_should_close(True)
@@ -93,6 +194,7 @@ class ViewerApplication:
 
 class GLFWHandle:
     window: Any
+    imgui_renderer: ImGuiGlfwRenderer
 
     def __init__(
         self,
@@ -122,11 +224,7 @@ class GLFWHandle:
         glfw.make_context_current(self.window)
         glfw.swap_interval(0)  # no vsync
 
-        # todo: setup GL debug output
-        # todo: setup dear imgui
-
     def __del__(self) -> None:
-        logger.info("Buy !")
         if hasattr(self, "window"):
             glfw.destroy_window(self.window)
         glfw.terminate()
@@ -142,6 +240,42 @@ class GLFWHandle:
 
     def swap_buffers(self) -> None:
         glfw.swap_buffers(self.window)
+
+
+@dataclass
+class Camera:
+    eye: glm.vec3 = glm.vec3(0, 0, 1)
+    center: glm.vec3 = glm.vec3(0, 0, 0)
+    up: glm.vec3 = glm.vec3(0, 1, 0)
+
+    def __post_init__(self) -> None:
+        front = self.center - self.eye
+        left = glm.cross(self.up, front)
+        if left == glm.vec3(0):
+            raise ValueError("up and front vectors of camera should not be aligned")
+        self.up = glm.normalize(glm.cross(front, left))
+
+    def get_view_matrix(self) -> glm.mat4:
+        return glm.lookAt(self.eye, self.center, self.up)
+
+    def front(self, *, normalized: bool = True) -> glm.vec3:
+        front = self.center - self.eye
+        return glm.normalize(front) if normalized else front
+
+    def left(self, *, normalized: bool = True) -> glm.vec3:
+        front = self.front(normalized=False)
+        left = glm.cross(self.up, front)
+        return glm.normalize(left) if normalized else left
+
+
+class FirstPersonCameraController:
+    camera: Camera
+
+    def __init__(self, window: Any, speed: float) -> None:
+        self.camera = Camera()
+
+    def update(self, ellapsed_time: float) -> Camera:
+        return self.camera
 
 
 def log_gl_info() -> None:

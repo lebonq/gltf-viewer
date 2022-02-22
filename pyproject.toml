@@ -3,6 +3,9 @@ addopts = "--html=.local/test_report/report.html --cov --cov-config pyproject.to
 junit_family = "xunit2"
 cache_dir = ".local/pytest_cache"
 asyncio_mode = "strict"
+markers = [
+    "opengl: marks tests as using opengl",
+]
 
 [tool.coverage.run]
 branch = true
