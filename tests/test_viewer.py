@@ -5,6 +5,9 @@ from __future__ import (
 from dataclasses import (
     dataclass,
 )
+from os import (
+    access,
+)
 from pathlib import (
     Path,
 )
@@ -36,6 +39,12 @@ from tests.conftest import (
 logger = get_logger("tests")
 
 gltf_file = LOCAL_DIR / "gltf-sample-models" / "2.0" / "Sponza" / "glTF" / "Sponza.gltf"
+
+vertex_attrib_index = {
+    "POSITION": 0,
+    "NORMAL": 1,
+    "TEXCOORD_0": 2,
+}
 
 
 @pytest.mark.opengl()
@@ -115,6 +124,7 @@ class ViewerApplication:
         gltf.convert_buffers(BufferFormat.BINARYBLOB)
 
         buffer_objects = create_buffer_objets(gltf)
+        vertex_array_objects = create_vertex_array_objects(gltf, buffer_objects)
 
         gl.glEnable(gl.GL_DEPTH_TEST)
 
@@ -231,6 +241,39 @@ def create_buffer_objets(gltf: GLTF2) -> List[gl.GLuint]:
         offset += gltf.buffers[i].byteLength
     gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
     return buffer_objects
+
+
+def create_vertex_array_objects(
+    gltf: GLTF2, buffer_objects: List[gl.GLuint]
+) -> List[List[gl.GLuint]]:
+    mesh_idx_to_vertex_arrays = []
+    for mesh_idx, mesh_def in enumerate(gltf.meshes):
+        mesh_idx_to_vertex_arrays.append(gl.glGenVertexArrays(len(mesh_def.primitives)))
+        for prim_idx, prim_def in enumerate(mesh_def.primitives):
+            vao = mesh_idx_to_vertex_arrays[mesh_idx][prim_idx]
+            gl.glBindVertexArray(vao)
+            for attr_name, attr_idx in vertex_attrib_index.items():
+                accessor_idx = getattr(prim_def.attributes, attr_name)
+                if accessor_idx is not None:
+                    accessor = gltf.accessors[accessor_idx]
+                    if accessor.bufferView is None:
+                        raise ValueError("accessor.bufferView cannot be None")
+                    buffer_view = gltf.bufferViews[accessor.bufferView]
+                    gl.glEnableVertexAttribArray(attr_idx)
+                    gl.glBindBuffer(
+                        gl.GL_ARRAY_BUFFER, buffer_objects[buffer_view.buffer]
+                    )
+                    gl.glVertexAttribPointer(
+                        attr_idx,
+                        int(accessor.type.split("VEC")[1]),
+                        accessor.componentType,
+                        gl.GL_FALSE,
+                        buffer_view.byteStride or 0,
+                        accessor.byteOffset or 0 + buffer_view.byteOffset or 0,
+                    )
+    gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
+    gl.glBindVertexArray(0)
+    return mesh_idx_to_vertex_arrays
 
 
 class GLFWHandle:
