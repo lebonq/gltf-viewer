@@ -25,9 +25,13 @@ from dotenv import (
 
 TEST_DIR = Path(__file__).parent
 ROOT_DIR = TEST_DIR.parent
+LOCAL_DIR = ROOT_DIR / ".local"
 
-load_dotenv(TEST_DIR / ".env")  # shared test environment configuration
-load_dotenv(ROOT_DIR / ".local" / "test.env")  # private test environment configuration
+SHARED_TEST_ENV_FILE = TEST_DIR / ".env"  # shared test environment configuration
+LOCAL_TEST_ENV_FILE = LOCAL_DIR / "test.env"  # local test environment configuration
+
+load_dotenv(SHARED_TEST_ENV_FILE)
+load_dotenv(LOCAL_TEST_ENV_FILE)
 
 
 def pytest_addoption(parser: Any) -> None:

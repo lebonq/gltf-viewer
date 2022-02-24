@@ -2,6 +2,7 @@
   "files.eol": "\n",
   "editor.formatOnSave": true,
   "python.testing.pytestArgs": [
+    "--run-opengl",
     "--no-cov"
     // --no-cov: Ensure the VSCode debugger keeps stopping on breakpoints
     //           see https://github.com/Microsoft/vscode-python/issues/693 for details

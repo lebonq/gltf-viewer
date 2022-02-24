@@ -10,20 +10,31 @@ from pathlib import (
 )
 from typing import (
     Any,
+    Callable,
+    List,
 )
 
 import glfw
 import glm
 import imgui
+import numpy as np
 import OpenGL.GL as gl  # noqa: N813
 import pytest
 from imgui.integrations.glfw import GlfwRenderer as ImGuiGlfwRenderer
+from pygltflib import (
+    GLTF2,
+)
 
 from gltf_viewer.utils.logging import (
     get_logger,
 )
+from tests.conftest import (
+    LOCAL_DIR,
+)
 
 logger = get_logger("tests")
+
+gltf_file = LOCAL_DIR / "gltf-sample-models" / "2.0" / "Sponza" / "glTF" / "Sponza.gltf"
 
 
 @pytest.mark.opengl()
@@ -96,6 +107,12 @@ class ViewerApplication:
 
     async def run(self) -> None:
         log_gl_info()
+
+        gltf = GLTF2().load(gltf_file)
+        if gltf is None:
+            raise RuntimeError(f"Unable to load {gltf_file}")
+
+        buffer_objects = create_buffer_objets(gltf)
 
         gl.glEnable(gl.GL_DEPTH_TEST)
 
@@ -190,6 +207,27 @@ class ViewerApplication:
 
     def stop(self) -> None:
         self.glfw_handle.set_should_close(True)
+
+
+def gen_gl_objects(func: Callable, count: int) -> List[gl.GLuint]:
+    return [func(count)] if count == 1 else func(count)
+
+
+def create_buffer_objets(gltf: GLTF2) -> List[gl.GLuint]:
+    count = len(gltf.buffers)
+    data = gltf.binary_blob()
+    offset = 0
+    buffer_objects = gen_gl_objects(gl.glGenBuffers, count)
+    for i in range(count):
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, buffer_objects[i])
+        gl.glBufferStorage(
+            gl.GL_ARRAY_BUFFER,
+            gltf.buffers[i].byteLength,
+            data[offset : offset + gltf.buffers[i].byteLength],
+        )
+        offset += gltf.buffers[i].byteLength
+    gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
+    return buffer_objects
 
 
 class GLFWHandle:
