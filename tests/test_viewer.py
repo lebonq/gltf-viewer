@@ -39,7 +39,7 @@ from tests.conftest import (
 
 logger = get_logger("tests")
 
-gltf_sample = "TriangleWithoutIndices"
+gltf_sample = "Sponza"
 gltf_file = (
     LOCAL_DIR
     / "gltf-sample-models"
@@ -61,7 +61,7 @@ vertex_attrib_index = {
 }
 
 forward_vertex_shader_src = """
-#version 330
+#version 330 core
 
 layout(location = 0) in vec3 aPosition;
 layout(location = 1) in vec3 aNormal;
@@ -85,7 +85,7 @@ void main()
 """
 
 normal_fragment_shader_src = """
-#version 330
+#version 330 core
 
 in vec3 vViewSpacePosition;
 in vec3 vViewSpaceNormal;
@@ -97,7 +97,7 @@ void main()
 {
    // Need another normalization because interpolation of vertex attributes does not maintain unit length
    vec3 viewSpaceNormal = normalize(vViewSpaceNormal);
-   fColor = vec3(1,0,0);//viewSpaceNormal;
+   fColor = viewSpaceNormal;
 }
 """
 
@@ -182,8 +182,8 @@ class ViewerApplication:
         vertex_array_objects = create_vertex_array_objects(gltf, buffer_objects)
 
         glsl_program = compile_program(
-            forward_vertex_shader_src,
-            normal_fragment_shader_src,
+            ShaderDef(gl.GL_VERTEX_SHADER, forward_vertex_shader_src),
+            ShaderDef(gl.GL_FRAGMENT_SHADER, normal_fragment_shader_src),
         )
 
         matrix_uniforms = MatrixUniforms(
@@ -218,14 +218,12 @@ class ViewerApplication:
             gl.glViewport(0, 0, self.width, self.height)
             gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
 
-            view_matrix = camera.get_view_matrix()
-
             draw_scene(
                 gltf,
                 vertex_array_objects,
                 matrix_uniforms,
                 proj_matrix,
-                glm.mat4(),
+                camera.get_view_matrix(),
             )
 
             imgui.new_frame()
@@ -350,7 +348,10 @@ def create_vertex_array_objects(
                         accessor.componentType,
                         gl.GL_FALSE,
                         buffer_view.byteStride or 0,
-                        accessor.byteOffset or 0 + buffer_view.byteOffset or 0,
+                        cast(
+                            accessor.byteOffset or 0 + buffer_view.byteOffset or 0,
+                            c_void_p,
+                        ),
                     )
             if prim_def.indices is not None:
                 accessor = gltf.accessors[prim_def.indices]
@@ -477,13 +478,19 @@ def get_local_to_world_matrix(
     return glm.scale(translation_rotation, scale_vector)
 
 
-def compile_program(vertex_shader_src: str, fragment_shader_src: str) -> gl.GLuint:
+@dataclass
+class ShaderDef:
+    shader_type: gl.GLenum
+    source_code: str
+
+
+def compile_program(*shader_defs: ShaderDef) -> gl.GLuint:
     program = gl.glCreateProgram()
 
-    gl.glAttachShader(program, compile_shader(gl.GL_VERTEX_SHADER, vertex_shader_src))
-    gl.glAttachShader(
-        program, compile_shader(gl.GL_FRAGMENT_SHADER, fragment_shader_src)
-    )
+    for shader_def in shader_defs:
+        gl.glAttachShader(
+            program, compile_shader(shader_def.shader_type, shader_def.source_code)
+        )
 
     gl.glLinkProgram(program)
     if gl.GL_TRUE != gl.glGetProgramiv(program, gl.GL_LINK_STATUS):
@@ -493,10 +500,10 @@ def compile_program(vertex_shader_src: str, fragment_shader_src: str) -> gl.GLui
 
 
 def compile_shader(
-    type: gl.GLenum,
+    shader_type: gl.GLenum,
     shader_src: str,
 ) -> gl.GLuint:
-    shader = gl.glCreateShader(type)
+    shader = gl.glCreateShader(shader_type)
 
     gl.glShaderSource(shader, shader_src)
     gl.glCompileShader(shader)
