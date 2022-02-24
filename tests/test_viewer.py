@@ -23,6 +23,7 @@ import pytest
 from imgui.integrations.glfw import GlfwRenderer as ImGuiGlfwRenderer
 from pygltflib import (
     GLTF2,
+    BufferFormat,
 )
 
 from gltf_viewer.utils.logging import (
@@ -111,6 +112,7 @@ class ViewerApplication:
         gltf = GLTF2().load(gltf_file)
         if gltf is None:
             raise RuntimeError(f"Unable to load {gltf_file}")
+        gltf.convert_buffers(BufferFormat.BINARYBLOB)
 
         buffer_objects = create_buffer_objets(gltf)
 
@@ -224,6 +226,7 @@ def create_buffer_objets(gltf: GLTF2) -> List[gl.GLuint]:
             gl.GL_ARRAY_BUFFER,
             gltf.buffers[i].byteLength,
             data[offset : offset + gltf.buffers[i].byteLength],
+            0,
         )
         offset += gltf.buffers[i].byteLength
     gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
