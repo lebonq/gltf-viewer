@@ -2,11 +2,12 @@ from __future__ import (
     annotations,
 )
 
+from ctypes import (
+    c_void_p,
+    cast,
+)
 from dataclasses import (
     dataclass,
-)
-from os import (
-    access,
 )
 from pathlib import (
     Path,
@@ -20,13 +21,13 @@ from typing import (
 import glfw
 import glm
 import imgui
-import numpy as np
 import OpenGL.GL as gl  # noqa: N813
 import pytest
 from imgui.integrations.glfw import GlfwRenderer as ImGuiGlfwRenderer
 from pygltflib import (
     GLTF2,
     BufferFormat,
+    Node,
 )
 
 from gltf_viewer.utils.logging import (
@@ -38,13 +39,67 @@ from tests.conftest import (
 
 logger = get_logger("tests")
 
-gltf_file = LOCAL_DIR / "gltf-sample-models" / "2.0" / "Sponza" / "glTF" / "Sponza.gltf"
+gltf_sample = "TriangleWithoutIndices"
+gltf_file = (
+    LOCAL_DIR
+    / "gltf-sample-models"
+    / "2.0"
+    / gltf_sample
+    / "glTF"
+    / f"{gltf_sample}.gltf"
+)
+look_at = [
+    glm.vec3([-5.26056, 6.59932, 0.85661]),
+    glm.vec3([-4.40144, 6.23486, 0.497347]),
+    glm.vec3([0.342113, 0.931131, -0.126476]),
+]
 
 vertex_attrib_index = {
     "POSITION": 0,
     "NORMAL": 1,
     "TEXCOORD_0": 2,
 }
+
+forward_vertex_shader_src = """
+#version 330
+
+layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec3 aNormal;
+layout(location = 2) in vec2 aTexCoords;
+
+out vec3 vViewSpacePosition;
+out vec3 vViewSpaceNormal;
+out vec2 vTexCoords;
+
+uniform mat4 uModelViewProjMatrix;
+uniform mat4 uModelViewMatrix;
+uniform mat4 uNormalMatrix;
+
+void main()
+{
+    vViewSpacePosition = vec3(uModelViewMatrix * vec4(aPosition, 1));
+    vViewSpaceNormal = normalize(vec3(uNormalMatrix * vec4(aNormal, 0)));
+    vTexCoords = aTexCoords;
+    gl_Position =  uModelViewProjMatrix * vec4(aPosition, 1);
+}
+"""
+
+normal_fragment_shader_src = """
+#version 330
+
+in vec3 vViewSpacePosition;
+in vec3 vViewSpaceNormal;
+in vec2 vTexCoords;
+
+out vec3 fColor;
+
+void main()
+{
+   // Need another normalization because interpolation of vertex attributes does not maintain unit length
+   vec3 viewSpaceNormal = normalize(vViewSpaceNormal);
+   fColor = vec3(1,0,0);//viewSpaceNormal;
+}
+"""
 
 
 @pytest.mark.opengl()
@@ -126,17 +181,35 @@ class ViewerApplication:
         buffer_objects = create_buffer_objets(gltf)
         vertex_array_objects = create_vertex_array_objects(gltf, buffer_objects)
 
+        glsl_program = compile_program(
+            forward_vertex_shader_src,
+            normal_fragment_shader_src,
+        )
+
+        matrix_uniforms = MatrixUniforms(
+            gl.glGetUniformLocation(glsl_program, "uModelViewProjMatrix"),
+            gl.glGetUniformLocation(glsl_program, "uModelViewMatrix"),
+            gl.glGetUniformLocation(glsl_program, "uNormalMatrix"),
+        )
+
         gl.glEnable(gl.GL_DEPTH_TEST)
+        gl.glUseProgram(glsl_program)
 
         gui_window_is_open = True
         gui_camera_collapsing_header_is_open = True
 
         txt = ""
 
-        camera = Camera()
         max_distance = 500
         camera_controller = FirstPersonCameraController(
-            self.glfw_handle.window, 0.5 * max_distance
+            self.glfw_handle.window,
+            0.5 * max_distance,
+            Camera(*look_at),
+        )
+        camera = camera_controller.camera
+
+        proj_matrix = glm.perspective(
+            70.0, self.width / self.height, 0.001 * max_distance, 1.5 * max_distance
         )
 
         while not self.glfw_handle.should_close():
@@ -147,7 +220,13 @@ class ViewerApplication:
 
             view_matrix = camera.get_view_matrix()
 
-            # draw scene here
+            draw_scene(
+                gltf,
+                vertex_array_objects,
+                matrix_uniforms,
+                proj_matrix,
+                glm.mat4(),
+            )
 
             imgui.new_frame()
 
@@ -248,7 +327,9 @@ def create_vertex_array_objects(
 ) -> List[List[gl.GLuint]]:
     mesh_idx_to_vertex_arrays = []
     for mesh_idx, mesh_def in enumerate(gltf.meshes):
-        mesh_idx_to_vertex_arrays.append(gl.glGenVertexArrays(len(mesh_def.primitives)))
+        mesh_idx_to_vertex_arrays.append(
+            gen_gl_objects(gl.glGenVertexArrays, len(mesh_def.primitives))
+        )
         for prim_idx, prim_def in enumerate(mesh_def.primitives):
             vao = mesh_idx_to_vertex_arrays[mesh_idx][prim_idx]
             gl.glBindVertexArray(vao)
@@ -271,9 +352,158 @@ def create_vertex_array_objects(
                         buffer_view.byteStride or 0,
                         accessor.byteOffset or 0 + buffer_view.byteOffset or 0,
                     )
+            if prim_def.indices is not None:
+                accessor = gltf.accessors[prim_def.indices]
+                if accessor.bufferView is None:
+                    raise ValueError("accessor.bufferView cannot be None")
+                buffer_view = gltf.bufferViews[accessor.bufferView]
+                gl.glBindBuffer(
+                    gl.GL_ELEMENT_ARRAY_BUFFER, buffer_objects[buffer_view.buffer]
+                )
+
     gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
     gl.glBindVertexArray(0)
     return mesh_idx_to_vertex_arrays
+
+
+def draw_scene(
+    gltf: GLTF2,
+    vertex_arrays: List[List[gl.GLuint]],
+    matrix_uniforms: MatrixUniforms,
+    proj_matrix: glm.mat4,
+    view_matrix: glm.mat4,
+) -> None:
+    if gltf.scene < 0:
+        return
+    for node_idx in gltf.scenes[gltf.scene].nodes:
+        draw_node(
+            gltf,
+            vertex_arrays,
+            matrix_uniforms,
+            proj_matrix,
+            view_matrix,
+            glm.mat4(),
+            node_idx,
+        )
+
+
+@dataclass
+class MatrixUniforms:
+    model_view_proj: gl.GLuint
+    model_view: gl.GLuint
+    normal: gl.GLuint
+
+
+def draw_node(
+    gltf: GLTF2,
+    vertex_arrays: List[List[gl.GLuint]],
+    matrix_uniforms: MatrixUniforms,
+    proj_matrix: glm.mat4,
+    view_matrix: glm.mat4,
+    parent_model_matrix: glm.mat4,
+    node_idx: int,
+) -> None:
+    node = gltf.nodes[node_idx]
+    model_matrix = get_local_to_world_matrix(node, parent_model_matrix)
+
+    for child_node_idx in node.children:
+        draw_node(
+            gltf,
+            vertex_arrays,
+            matrix_uniforms,
+            proj_matrix,
+            view_matrix,
+            model_matrix,
+            child_node_idx,
+        )
+
+    if node.mesh is None:
+        return
+
+    model_view = view_matrix * model_matrix
+    model_view_proj = proj_matrix * model_view
+    normal_matrix = glm.transpose(glm.inverse(model_view))
+
+    gl.glUniformMatrix4fv(
+        matrix_uniforms.model_view_proj, 1, gl.GL_FALSE, glm.value_ptr(model_view_proj)
+    )
+    gl.glUniformMatrix4fv(
+        matrix_uniforms.model_view, 1, gl.GL_FALSE, glm.value_ptr(model_view)
+    )
+    gl.glUniformMatrix4fv(
+        matrix_uniforms.normal, 1, gl.GL_FALSE, glm.value_ptr(normal_matrix)
+    )
+
+    mesh = gltf.meshes[node.mesh]
+    mesh_vertex_arrays = vertex_arrays[node.mesh]
+    for prim_idx, prim_def in enumerate(mesh.primitives):
+        vao = mesh_vertex_arrays[prim_idx]
+        gl.glBindVertexArray(vao)
+        if prim_def.indices is not None:
+            accessor = gltf.accessors[prim_def.indices]
+            if accessor.bufferView is None:
+                raise ValueError("accessor.bufferView cannot be None")
+            buffer_view = gltf.bufferViews[accessor.bufferView]
+            byte_offset = accessor.byteOffset or 0 + buffer_view.byteOffset or 0
+            gl.glDrawElements(
+                prim_def.mode,
+                accessor.count,
+                accessor.componentType,
+                cast(byte_offset, c_void_p),
+            )
+        else:
+            accessor = gltf.accessors[prim_def.attributes.POSITION]
+            gl.glDrawArrays(prim_def.mode, 0, accessor.count)
+
+
+def get_local_to_world_matrix(
+    node: Node, parent_local_to_world_matrix: glm.mat4
+) -> glm.mat4:
+    # Extract model matrix
+    # https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#transformations
+    if node.matrix is not None:
+        return parent_local_to_world_matrix * glm.mat4(*node.matrix)
+    translation_vector = (
+        glm.vec3(node.translation) if node.translation is not None else glm.vec3(0)
+    )
+    translation = glm.translate(translation_vector)
+    rotation_quaternion = (
+        glm.quat(node.rotation[3], *node.rotation[0:3])
+        if node.rotation is not None
+        else glm.quat(1, 0, 0, 0)
+    )
+    translation_rotation = translation * glm.mat4_cast(rotation_quaternion)
+    scale_vector = glm.vec3(node.scale) if node.scale is not None else glm.vec3(1)
+    return glm.scale(translation_rotation, scale_vector)
+
+
+def compile_program(vertex_shader_src: str, fragment_shader_src: str) -> gl.GLuint:
+    program = gl.glCreateProgram()
+
+    gl.glAttachShader(program, compile_shader(gl.GL_VERTEX_SHADER, vertex_shader_src))
+    gl.glAttachShader(
+        program, compile_shader(gl.GL_FRAGMENT_SHADER, fragment_shader_src)
+    )
+
+    gl.glLinkProgram(program)
+    if gl.GL_TRUE != gl.glGetProgramiv(program, gl.GL_LINK_STATUS):
+        raise RuntimeError(gl.glGetProgramInfoLog(program))
+
+    return program
+
+
+def compile_shader(
+    type: gl.GLenum,
+    shader_src: str,
+) -> gl.GLuint:
+    shader = gl.glCreateShader(type)
+
+    gl.glShaderSource(shader, shader_src)
+    gl.glCompileShader(shader)
+    if gl.GL_TRUE != gl.glGetShaderiv(shader, gl.GL_COMPILE_STATUS):
+        raise RuntimeError(gl.glGetShaderInfoLog(shader))
+
+    return shader
 
 
 class GLFWHandle:
@@ -355,8 +585,8 @@ class Camera:
 class FirstPersonCameraController:
     camera: Camera
 
-    def __init__(self, window: Any, speed: float) -> None:
-        self.camera = Camera()
+    def __init__(self, window: Any, speed: float, camera: Camera = Camera()) -> None:
+        self.camera = camera
 
     def update(self, ellapsed_time: float) -> Camera:
         return self.camera
