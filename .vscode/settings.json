@@ -1,5 +1,16 @@
 {
+  "[c,cpp]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
   "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
-  "editor.formatOnSave": true,
+  "cmake.configureOnOpen": false,
   "cmake.buildDirectory": "${workspaceFolder}/build",
+  "cmake.configureSettings": {
+    "CMAKE_BUILD_TYPE": "Debug",
+    "BUILD_TESTING": "1"
+  },
+  "cmake.debugConfig": {
+    "console": "integratedTerminal"
+  }
 }
