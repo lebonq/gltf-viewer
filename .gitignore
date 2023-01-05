@@ -3,3 +3,5 @@ build
 dist
 gltf-sample-models
 output-images
+cmake-build-release
+cmake-build-debug
