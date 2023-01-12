@@ -1,7 +1,7 @@
 *.imgui.ini
 build
 dist
-gltf-sample-models
+src/assets
 output-images
 cmake-build-release
 cmake-build-debug

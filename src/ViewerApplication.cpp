@@ -55,9 +55,14 @@ int ViewerApplication::run()
   }
 
   tinygltf::Model model;
-  // TODO Loading the glTF file
 
-  // TODO Creation of Buffer Objects
+  std::cout << "Load " << this->m_gltfFilePath << std::endl;
+  loadGltfFile(model);
+  std::cout << "Loaded" << std::endl;
+
+  std::cout << "Create Buffer Objects" << std::endl;
+  createBufferObjects(model);
+  std::cout << "Created" << std::endl;
 
   // TODO Creation of Vertex Array Objects
 
@@ -181,4 +186,39 @@ ViewerApplication::ViewerApplication(const fs::path &appPath, uint32_t width,
   glfwSetKeyCallback(m_GLFWHandle.window(), keyCallback);
 
   printGLVersion();
+}
+
+bool ViewerApplication::loadGltfFile(tinygltf::Model &model) {
+
+  tinygltf::TinyGLTF loader;
+  std::string err;
+  std::string warn;
+  bool ret = loader.LoadASCIIFromFile(&model, &err, &warn,m_gltfFilePath);
+
+  if (!warn.empty()) {
+    printf("Warn: %s\n", warn.c_str());
+  }
+
+  if (!err.empty()) {
+    printf("Err: %s\n", err.c_str());
+  }
+
+  return ret;
+
+}
+
+std::vector<GLuint> ViewerApplication::createBufferObjects( const tinygltf::Model &model){
+
+  std::vector<GLuint> bufferObjects(model.buffers.size());
+
+  glGenBuffers(GLsizei(bufferObjects.size()), bufferObjects.data());
+
+  for (size_t i = 0; i < model.buffers.size(); ++i) {
+    const auto &buffer = model.buffers[i].data;
+    glBindBuffer(GL_ARRAY_BUFFER, bufferObjects[i]);
+    glBufferStorage(GL_ARRAY_BUFFER, buffer.size(), buffer.data(), 0);
+  }
+
+  return bufferObjects;
+
 }
