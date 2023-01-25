@@ -11,6 +11,7 @@
 #include "Data.hpp"
 #include "utils/cameras.hpp"
 #include "utils/gltf.hpp"
+#include "utils/images.hpp"
 
 #include <stb_image_write.h>
 #include <tiny_gltf.h>
@@ -121,7 +122,6 @@ int ViewerApplication::run()
                 const auto accessorIdx = (*begin(primitive.attributes)).second;
                 const auto &accessor = model.accessors[accessorIdx];
                 glDrawArrays(primitive.mode, 0, GLsizei(accessor.count));
-
               }
             }
           }
@@ -137,6 +137,17 @@ int ViewerApplication::run()
       }
     }
   };
+
+  if (!m_OutputPath.empty()) {
+    std::vector<unsigned char> pixels(m_nWindowWidth * m_nWindowHeight * 3);
+    renderToImage(m_nWindowWidth, m_nWindowHeight, 3, pixels.data(),
+        [&]() { drawScene(cameraController.getCamera()); });
+    flipImageYAxis(m_nWindowWidth, m_nWindowHeight, 3, pixels.data());
+    const auto strPath = m_OutputPath.string();
+    stbi_write_png(
+        strPath.c_str(), m_nWindowWidth, m_nWindowHeight, 3, pixels.data(), 0);
+    return 0;
+  }
 
   // Loop until the user closes the window
   for (auto iterationCount = 0u; !m_GLFWHandle.shouldClose();
