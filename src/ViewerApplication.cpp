@@ -10,6 +10,7 @@
 
 #include "Data.hpp"
 #include "utils/cameras.hpp"
+#include "utils/gltf.hpp"
 
 #include <stb_image_write.h>
 #include <tiny_gltf.h>
@@ -85,12 +86,55 @@ int ViewerApplication::run()
     // We use a std::function because a simple lambda cannot be recursive
     const std::function<void(int, const glm::mat4 &)> drawNode =
         [&](int nodeIdx, const glm::mat4 &parentMatrix) {
-          // TODO The drawNode function
+          auto v_node = model.nodes[nodeIdx];
+          glm::mat4 modelMatrix = getLocalToWorldMatrix(v_node, parentMatrix);
+          if (v_node.mesh >= 0) {
+            glm::mat4 modelViewMatrix, modelViewProjectionMatrix, normalMatrix;
+            modelViewMatrix = viewMatrix * modelMatrix;
+            modelViewProjectionMatrix = projMatrix * modelViewMatrix;
+            normalMatrix = glm::transpose(glm::inverse(modelViewMatrix));
+            glUniformMatrix4fv(modelViewProjMatrixLocation, 1, GL_FALSE,
+                glm::value_ptr(modelViewProjectionMatrix));
+            glUniformMatrix4fv(modelViewMatrixLocation, 1, GL_FALSE,
+                glm::value_ptr(modelViewMatrix));
+            glUniformMatrix4fv(normalMatrixLocation, 1, GL_FALSE,
+                glm::value_ptr(normalMatrix));
+
+            // get mesh an draw every primitives
+            auto v_mesh = model.meshes[v_node.mesh];
+            auto v_vaoRange = v_meshToVertexArrays[v_node.mesh];
+
+            for (int i = 0; i < v_mesh.primitives.size(); ++i) {
+              auto v_vao = vertexArrayObjects[v_vaoRange.begin + i];
+              auto primitive = v_mesh.primitives[i];
+              glBindVertexArray(v_vao);
+              if (primitive.indices >= 0) {
+                const auto &accessor = model.accessors[primitive.indices];
+                const auto &bufferView = model.bufferViews[accessor.bufferView];
+                const auto byteOffset =
+                    accessor.byteOffset + bufferView.byteOffset;
+                glDrawElements(primitive.mode, GLsizei(accessor.count),
+                    accessor.componentType, (const GLvoid *)byteOffset);
+
+              } else {
+                // Take first accessor to get the count
+                const auto accessorIdx = (*begin(primitive.attributes)).second;
+                const auto &accessor = model.accessors[accessorIdx];
+                glDrawArrays(primitive.mode, 0, GLsizei(accessor.count));
+
+              }
+            }
+          }
+          for (auto v_child : v_node.children) {
+            drawNode(v_child, parentMatrix);
+          }
         };
 
     // Draw the scene referenced by gltf file
     if (model.defaultScene >= 0) {
-
+      for (auto node : model.scenes[model.defaultScene].nodes) {
+        drawNode(node, glm::mat4(1));
+      }
     }
   };
 

@@ -23,12 +23,8 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Add loadGltf and createBufferObjects">
-      <change afterPath="$PROJECT_DIR$/src/Data.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Add creation of vertexArrayObjects">
       <change beforePath="$PROJECT_DIR$/src/ViewerApplication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ViewerApplication.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,13 +70,13 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.View Sponza">
-    <configuration name="View Helmet" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer assets/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+  <component name="RunManager" selected="CMake Application.View Helmet">
+    <configuration name="View Helmet" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer assets/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf --lookat 0,0,2.29362,0,-0.0898785,1.29767,0,0.995953,-0.0898785" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="View Sponza" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer assets/2.0/Sponza/glTF/Sponza.gltf --lookat -5.26056,6.59932,0.85661,-4.40144,6.23486,0.497347,0.342113,0.931131,-0.126476" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+    <configuration name="View Sponza" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer assets/2.0/Sponza/glTF/Sponza.gltf --lookat -7.78261,4.45689,-0.570294,-6.79082,4.55365,-0.486718,-0.0975951,0.995214,0.0061446" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -126,7 +122,7 @@
       <workItem from="1673962551507" duration="917000" />
       <workItem from="1674481564520" duration="22000" />
       <workItem from="1674493317732" duration="43000" />
-      <workItem from="1674652470567" duration="3133000" />
+      <workItem from="1674652470567" duration="8078000" />
     </task>
     <task id="LOCAL-00001" summary="Add loadGltf and createBufferObjects">
       <created>1673517456196</created>
@@ -135,7 +131,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673517456196</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Add creation of vertexArrayObjects">
+      <created>1674656648512</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1674656648512</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -154,6 +157,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Add loadGltf and createBufferObjects" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add loadGltf and createBufferObjects" />
+    <MESSAGE value="Add creation of vertexArrayObjects" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add creation of vertexArrayObjects" />
   </component>
 </project>
