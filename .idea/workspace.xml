@@ -23,13 +23,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Add png render">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ViewerApplication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/cameras.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/cameras.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/cameras.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/cameras.hpp" afterDir="false" />
-    </list>
+    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Add trackball" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -78,7 +72,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.Render Sponza">
+  <component name="RunManager" selected="CMake Application.View Sponza">
     <configuration name="Render Helmet" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer assets/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf --lookat 0,0,2.29362,0,-0.0898785,1.29767,0,0.995953,-0.0898785 --output helmet.png" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -139,7 +133,7 @@
       <workItem from="1674493317732" duration="43000" />
       <workItem from="1674652470567" duration="11110000" />
       <workItem from="1678354602427" duration="1558000" />
-      <workItem from="1678357472893" duration="1734000" />
+      <workItem from="1678357472893" duration="1784000" />
     </task>
     <task id="LOCAL-00001" summary="Add loadGltf and createBufferObjects">
       <created>1673517456196</created>
@@ -162,7 +156,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674661629342</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Add trackball">
+      <created>1678360630832</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1678360630832</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -183,6 +184,7 @@
     <MESSAGE value="Add loadGltf and createBufferObjects" />
     <MESSAGE value="Add creation of vertexArrayObjects" />
     <MESSAGE value="Add Draw Function" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Draw Function" />
+    <MESSAGE value="Add trackball" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add trackball" />
   </component>
 </project>
