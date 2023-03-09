@@ -1,5 +1,6 @@
 #pragma once
 
+#include "tiny_gltf.h"
 #include "utils/GLFWHandle.hpp"
 #include "utils/cameras.hpp"
 #include "utils/filesystem.hpp"
@@ -45,6 +46,11 @@ private:
   GLFWHandle m_GLFWHandle{int(m_nWindowWidth), int(m_nWindowHeight),
       "glTF Viewer",
       m_OutputPath.empty()}; // show the window only if m_OutputPath is empty
+  bool loadGltfFile(tinygltf::Model & model);
+  std::vector<GLuint> createBufferObjects(const tinygltf::Model &model);
+  std::vector<GLuint> createVertexArrayObjects(const tinygltf::Model &model,
+  const std::vector<GLuint> &bufferObjects,
+  std::vector<VaoRange> &meshIndexToVaoRange);
   /*
     ! THE ORDER OF DECLARATION OF MEMBER VARIABLES IS IMPORTANT !
     - m_ImGuiIniFilename.c_str() will be used by ImGUI in ImGui::Shutdown, which

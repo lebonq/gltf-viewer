@@ -184,6 +184,6 @@ install(
 if(EXISTS ${SRC_DIR}/assets/)
     install(
         DIRECTORY ${SRC_DIR}/assets/
-        DESTINATION assets/
+        DESTINATION src/assets/
     )
 endif()
