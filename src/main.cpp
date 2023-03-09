@@ -59,8 +59,8 @@ int main(int argc, char **argv)
           }
         }
 
-        uint32_t width = imageWidth ? args::get(imageWidth) : 1280;
-        uint32_t height = imageHeight ? args::get(imageHeight) : 720;
+        uint32_t width = imageWidth ? args::get(imageWidth) : 1280*2;
+        uint32_t height = imageHeight ? args::get(imageHeight) : 720*2;
 
         ViewerApplication app{fs::path{argv[0]}, width, height, args::get(file),
             lookatParams, args::get(vertexShader), args::get(fragmentShader),
