@@ -151,14 +151,22 @@ bool TrackballCameraController::update(float elapsedTime)
       return false;
     }
 
+    // We need to move along the view vector of the camera
     const auto viewVector = m_camera.center() - m_camera.eye();
-    auto length = glm::length(viewVector);
+    const auto l = glm::length(viewVector);
+    if (mouseOffset > 0.f) {
+      // We don't want to move more that the length of the view vector (cannot
+      // go beyond target)
+      mouseOffset = glm::min(mouseOffset, l - 1e-4f);
+    }
+    // Normalize view vector for the translation
+    const auto front = viewVector / l;
+    const auto translationVector = mouseOffset * front;
 
-    auto front = viewVector / length;
-    auto translationVector = mouseOffset * front;
-
-    auto newEye = m_camera.eye() + translationVector;
+    // Update camera with new eye position
+    const auto newEye = m_camera.eye() + translationVector;
     m_camera = Camera(newEye, m_camera.center(), m_worldUpAxis);
+
     return true;
   }
 
@@ -171,21 +179,21 @@ bool TrackballCameraController::update(float elapsedTime)
     return false;
   }
 
+  // We need to rotate eye around center, for that we rotate the vector [center,
+  // eye] (= depthAxis) in order to compute a new eye position
   const auto depthAxis = m_camera.eye() - m_camera.center();
 
-  auto horizontalAxis = m_camera.left();
-  auto longitudeRotationMatrix =
-      rotate(mat4(1), longitudeAngle, horizontalAxis);
-  auto rotatedDepthAxis = vec3(longitudeRotationMatrix * vec4(depthAxis, 0));
-
-  auto latitudeRotationMatrix =
+  const auto latitudeRotationMatrix =
       rotate(mat4(1), latitudeAngle, m_worldUpAxis);
-  auto finalDepthAxis =
-      vec3(latitudeRotationMatrix * vec4(rotatedDepthAxis, 0));
 
-  auto newEye = m_camera.center() + finalDepthAxis;
+  const auto horizontalAxis = m_camera.left();
+  const auto rotationMatrix =
+      rotate(latitudeRotationMatrix, longitudeAngle, horizontalAxis);
+  auto rotatedDepthAxis = vec3(rotationMatrix * vec4(depthAxis, 0));
+
+  // Update camera with new eye position
+  const auto newEye = m_camera.center() + rotatedDepthAxis;
   m_camera = Camera(newEye, m_camera.center(), m_worldUpAxis);
 
   return true;
 }
-
