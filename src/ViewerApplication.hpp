@@ -33,7 +33,7 @@ private:
 
   fs::path m_gltfFilePath;
   std::string m_vertexShader = "forward.vs.glsl";
-  std::string m_fragmentShader = "diffuse_directional_light.fs.glsl";
+  std::string m_fragmentShader = "pbr_directional_light.fs.glsl";
 
   bool m_hasUserCamera = false;
   Camera m_userCamera;
@@ -47,6 +47,7 @@ private:
       "glTF Viewer",
       m_OutputPath.empty()}; // show the window only if m_OutputPath is empty
   bool loadGltfFile(tinygltf::Model & model);
+  std::vector<GLuint> createTextureObjects(const tinygltf::Model &model) const;
   std::vector<GLuint> createBufferObjects(const tinygltf::Model &model);
   std::vector<GLuint> createVertexArrayObjects(const tinygltf::Model &model,
   const std::vector<GLuint> &bufferObjects,
