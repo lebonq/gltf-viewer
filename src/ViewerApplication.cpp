@@ -100,6 +100,21 @@ int ViewerApplication::run()
   auto textureObjects = createTextureObjects(model);
   std::cerr << "Loadded" << std::endl;
 
+   GLuint whiteTexture = 0;
+
+  // Create white texture for object with no base color texture
+  glGenTextures(1, &whiteTexture);
+  glBindTexture(GL_TEXTURE_2D, whiteTexture);
+  float white[] = {1, 1, 1, 1};
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_FLOAT, white);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+
   std::cerr << "Create Buffer Objects" << std::endl;
   auto v_bufferObjects = createBufferObjects(model);
   std::cerr << "Created" << std::endl;
@@ -128,7 +143,7 @@ int ViewerApplication::run()
       }
 
       if (uBaseColorTexture >= 0) {
-        auto textureObject = 0;
+        auto textureObject = whiteTexture;
         if (pbrMetallicRoughness.baseColorTexture.index >= 0) {
           const auto &texture =
               model.textures[pbrMetallicRoughness.baseColorTexture.index];
@@ -187,7 +202,7 @@ int ViewerApplication::run()
             uOcclusionStrength, (float)material.occlusionTexture.strength);
       }
       if (uOcclusionTexture >= 0) {
-        auto textureObject = 0;
+        auto textureObject = whiteTexture;
         if (material.occlusionTexture.index >= 0) {
           const auto &texture = model.textures[material.occlusionTexture.index];
           if (texture.source >= 0) {
@@ -213,7 +228,7 @@ int ViewerApplication::run()
       if (uBaseColorTexture >= 0) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glUniform1i(uBaseColorTexture, 0);
+        glUniform1i(uBaseColorTexture, whiteTexture);
       }
       if (uMetallicFactor >= 0) {
         glUniform1f(uMetallicFactor, 1.f);
