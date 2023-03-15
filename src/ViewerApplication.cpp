@@ -36,6 +36,14 @@ int ViewerApplication::run()
       glGetUniformLocation(glslProgram.glId(), "uModelViewMatrix");
   const auto normalMatrixLocation =
       glGetUniformLocation(glslProgram.glId(), "uNormalMatrix");
+  const auto lightDirection =
+      glGetUniformLocation(glslProgram.glId(), "uLightDirection");
+  const auto lightIntensity =
+      glGetUniformLocation(glslProgram.glId(), "uLightIntensity");
+
+  glm::vec3 lightDir = glm::vec3(1.0f, 1.0f, 1.0f);
+  glm::vec3 lightInt = glm::vec3(1.0f, 1.0f, 1.0f);
+  bool lightFromCamera = false;
 
   // Build projection matrix
   std::cerr << "Load model" << this->m_gltfFilePath << std::endl;
@@ -104,6 +112,15 @@ int ViewerApplication::run()
                 glm::value_ptr(modelViewMatrix));
             glUniformMatrix4fv(normalMatrixLocation, 1, GL_FALSE,
                 glm::value_ptr(normalMatrix));
+            if (lightFromCamera) {
+              glUniform3f(lightDirection, 0, 0, 1);
+            } else {
+              const auto lightDirectionInViewSpace = glm::normalize(
+                  glm::vec3(viewMatrix * glm::vec4(lightDir, 0.)));
+              glUniform3f(lightDirection, lightDirectionInViewSpace[0],
+                  lightDirectionInViewSpace[1], lightDirectionInViewSpace[2]);
+            }
+            glUniform3fv(lightIntensity, 1, glm::value_ptr(lightInt));
 
             // get mesh an draw every primitives
             auto v_mesh = model.meshes[v_node.mesh];
@@ -207,6 +224,29 @@ int ViewerApplication::run()
         cameraController->setCamera(currentCamera);
       }
 
+       if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen)) {
+        static float lightTheta = 0.f;
+        static float lightPhi = 0.f;
+
+        if (ImGui::SliderFloat("theta", &lightTheta, 0, glm::pi<float>()) ||
+            ImGui::SliderFloat("phi", &lightPhi, 0, 2.f * glm::pi<float>())) {
+          const auto sinPhi = glm::sin(lightPhi);
+          const auto cosPhi = glm::cos(lightPhi);
+          const auto sinTheta = glm::sin(lightTheta);
+          const auto cosTheta = glm::cos(lightTheta);
+          lightDir =
+              glm::vec3(sinTheta * cosPhi, cosTheta, sinTheta * sinPhi);
+        }
+
+        static glm::vec3 lightColor(1.f, 1.f, 1.f);
+        static float lightIntensityFactor = 1.f;
+
+        if (ImGui::ColorEdit3("color", (float *)&lightColor) ||
+            ImGui::InputFloat("intensity", &lightIntensityFactor)) {
+          lightInt = lightColor * lightIntensityFactor;
+        }
+      }
+      ImGui::Checkbox("light from camera", &lightFromCamera);
       ImGui::End();
     }
 
