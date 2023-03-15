@@ -23,17 +23,29 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Add trackball" />
+    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Add directionnal light">
+      <change afterPath="$PROJECT_DIR$/src/shaders/pbr_directional_light.fs.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ViewerApplication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ViewerApplication.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.hpp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="shader-template" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="tutorial-v1" />
+        <entry key="$PROJECT_DIR$" value="directional-light" />
       </map>
     </option>
   </component>
@@ -63,7 +75,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -72,13 +84,13 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.View Sponza">
-    <configuration name="Render Helmet" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer assets/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf --lookat 0,0,2.29362,0,-0.0898785,1.29767,0,0.995953,-0.0898785 --output helmet.png" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+  <component name="RunManager" selected="CMake Application.Render Helmet">
+    <configuration name="Render Helmet" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer assets/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf --lookat 0,0,2.29362,0,-0.0898785,1.29767,0,0.995953,-0.0898785 --output helmet.png --w 3000 --h 2000" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Render Sponza" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer assets/2.0/Sponza/glTF/Sponza.gltf --lookat 6.00989,4.61461,-0.00445333,-2.55757,4.75953,0.145774,0.0169079,0.999857,-0.000296474 --output sponza.png" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+    <configuration name="Render Sponza" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer assets/2.0/Sponza/glTF/Sponza.gltf --lookat 6.00989,4.61461,-0.00445333,-2.55757,4.75953,0.145774,0.0169079,0.999857,-0.000296474 --output sponza.png --w 3000 --h 2000" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -89,6 +101,11 @@
       </method>
     </configuration>
     <configuration name="View Sponza" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer assets/2.0/Sponza/glTF/Sponza.gltf --lookat -7.78261,4.45689,-0.570294,-6.79082,4.55365,-0.486718,-0.0975951,0.995214,0.0061446" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -104,12 +121,12 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake Application.View Helmet" />
       <item itemvalue="CMake Application.Render Helmet" />
-      <item itemvalue="CMake Application.View Sponza" />
       <item itemvalue="CMake Application.Render Sponza" />
-      <item itemvalue="CMake Application.uninstall" />
+      <item itemvalue="CMake Application.View Helmet" />
+      <item itemvalue="CMake Application.View Sponza" />
       <item itemvalue="CMake Application.glfw" />
+      <item itemvalue="CMake Application.uninstall" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -133,7 +150,14 @@
       <workItem from="1674493317732" duration="43000" />
       <workItem from="1674652470567" duration="11110000" />
       <workItem from="1678354602427" duration="1558000" />
-      <workItem from="1678357472893" duration="1784000" />
+      <workItem from="1678357472893" duration="3303000" />
+      <workItem from="1678577736337" duration="5000" />
+      <workItem from="1678812181914" duration="2441000" />
+      <workItem from="1678814654414" duration="12000" />
+      <workItem from="1678814819428" duration="134000" />
+      <workItem from="1678814967341" duration="913000" />
+      <workItem from="1678871961168" duration="5028000" />
+      <workItem from="1678885133478" duration="6853000" />
     </task>
     <task id="LOCAL-00001" summary="Add loadGltf and createBufferObjects">
       <created>1673517456196</created>
@@ -163,7 +187,28 @@
       <option name="project" value="LOCAL" />
       <updated>1678360630832</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Add trackball">
+      <created>1678360654766</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1678360654766</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Add trackball and new camera controller">
+      <created>1678815121902</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1678815121902</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add directionnal light">
+      <created>1678885369498</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1678885369498</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -185,6 +230,8 @@
     <MESSAGE value="Add creation of vertexArrayObjects" />
     <MESSAGE value="Add Draw Function" />
     <MESSAGE value="Add trackball" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add trackball" />
+    <MESSAGE value="Add trackball and new camera controller" />
+    <MESSAGE value="Add directionnal light" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add directionnal light" />
   </component>
 </project>

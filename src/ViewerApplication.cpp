@@ -36,14 +36,36 @@ int ViewerApplication::run()
       glGetUniformLocation(glslProgram.glId(), "uModelViewMatrix");
   const auto normalMatrixLocation =
       glGetUniformLocation(glslProgram.glId(), "uNormalMatrix");
-  const auto lightDirection =
+  const auto ulightDirection =
       glGetUniformLocation(glslProgram.glId(), "uLightDirection");
-  const auto lightIntensity =
+  const auto ulightIntensity =
       glGetUniformLocation(glslProgram.glId(), "uLightIntensity");
+  const auto uBaseColorTexture =
+      glGetUniformLocation(glslProgram.glId(), "uBaseColorTexture");
+  const auto uBaseColorFactor =
+      glGetUniformLocation(glslProgram.glId(), "uBaseColorFactor");
+  const auto uMetallicRoughnessTexture =
+      glGetUniformLocation(glslProgram.glId(), "uMetallicRoughnessTexture");
+  const auto uMetallicFactor =
+      glGetUniformLocation(glslProgram.glId(), "uMetallicFactor");
+  const auto uRoughnessFactor =
+      glGetUniformLocation(glslProgram.glId(), "uRoughnessFactor");
+  const auto uEmissiveTexture =
+      glGetUniformLocation(glslProgram.glId(), "uEmissiveTexture");
+  const auto uEmissiveFactor =
+      glGetUniformLocation(glslProgram.glId(), "uEmissiveFactor");
+    const auto uOcclusionTexture =
+      glGetUniformLocation(glslProgram.glId(), "uOcclusionTexture");
+  const auto uOcclusionStrength =
+      glGetUniformLocation(glslProgram.glId(), "uOcclusionStrength");
+  const auto uApplyOcclusion =
+      glGetUniformLocation(glslProgram.glId(), "uApplyOcclusion");
 
   glm::vec3 lightDir = glm::vec3(1.0f, 1.0f, 1.0f);
   glm::vec3 lightInt = glm::vec3(1.0f, 1.0f, 1.0f);
   bool lightFromCamera = false;
+  bool applyOcclusion = true;
+
 
   // Build projection matrix
   std::cerr << "Load model" << this->m_gltfFilePath << std::endl;
@@ -74,6 +96,25 @@ int ViewerApplication::run()
     cameraController->setCamera(Camera{eye, center, up});
   }
 
+  std::cerr << "Load texture" << std::endl;
+  auto textureObjects = createTextureObjects(model);
+  std::cerr << "Loadded" << std::endl;
+
+   GLuint whiteTexture = 0;
+
+  // Create white texture for object with no base color texture
+  glGenTextures(1, &whiteTexture);
+  glBindTexture(GL_TEXTURE_2D, whiteTexture);
+  float white[] = {1, 1, 1, 1};
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_FLOAT, white);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+
   std::cerr << "Create Buffer Objects" << std::endl;
   auto v_bufferObjects = createBufferObjects(model);
   std::cerr << "Created" << std::endl;
@@ -87,6 +128,139 @@ int ViewerApplication::run()
   // Setup OpenGL state for rendering
   glEnable(GL_DEPTH_TEST);
   glslProgram.use();
+
+  //Lambda function to bind material
+  const auto bindMaterial = [&](const auto materialIndex){
+    if (materialIndex >= 0) {
+      const auto &material = model.materials[materialIndex];
+      const auto &pbrMetallicRoughness = material.pbrMetallicRoughness;
+      if (uBaseColorFactor >= 0) {
+        glUniform4f(uBaseColorFactor,
+            (float)pbrMetallicRoughness.baseColorFactor[0],
+            (float)pbrMetallicRoughness.baseColorFactor[1],
+            (float)pbrMetallicRoughness.baseColorFactor[2],
+            (float)pbrMetallicRoughness.baseColorFactor[3]);
+      }
+
+      if (uBaseColorTexture >= 0) {
+        auto textureObject = whiteTexture;
+        if (pbrMetallicRoughness.baseColorTexture.index >= 0) {
+          const auto &texture =
+              model.textures[pbrMetallicRoughness.baseColorTexture.index];
+          if (texture.source >= 0) {
+            textureObject = textureObjects[texture.source];
+          }
+        }
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textureObject);
+        glUniform1i(uBaseColorTexture, 0);
+      }
+            if (uMetallicFactor >= 0) {
+        glUniform1f(
+            uMetallicFactor, (float)pbrMetallicRoughness.metallicFactor);
+      }
+      if (uRoughnessFactor >= 0) {
+        glUniform1f(
+            uRoughnessFactor, (float)pbrMetallicRoughness.roughnessFactor);
+      }
+      if (uMetallicRoughnessTexture >= 0) {
+        auto textureObject = 0u;
+        if (pbrMetallicRoughness.metallicRoughnessTexture.index >= 0) {
+          const auto &texture =
+              model.textures[pbrMetallicRoughness.metallicRoughnessTexture
+                                 .index];
+          if (texture.source >= 0) {
+            textureObject = textureObjects[texture.source];
+          }
+        }
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, textureObject);
+        glUniform1i(uMetallicRoughnessTexture, 1);
+      }
+      if (uEmissiveFactor >= 0) {
+        glUniform3f(uEmissiveFactor, (float)material.emissiveFactor[0],
+            (float)material.emissiveFactor[1],
+            (float)material.emissiveFactor[2]);
+      }
+      if (uEmissiveTexture >= 0) {
+        auto textureObject = 0u;
+        if (material.emissiveTexture.index >= 0) {
+          const auto &texture = model.textures[material.emissiveTexture.index];
+          if (texture.source >= 0) {
+            textureObject = textureObjects[texture.source];
+          }
+        }
+
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, textureObject);
+        glUniform1i(uEmissiveTexture, 2);
+      }
+      if (uOcclusionStrength >= 0) {
+        glUniform1f(
+            uOcclusionStrength, (float)material.occlusionTexture.strength);
+      }
+      if (uOcclusionTexture >= 0) {
+        auto textureObject = whiteTexture;
+        if (material.occlusionTexture.index >= 0) {
+          const auto &texture = model.textures[material.occlusionTexture.index];
+          if (texture.source >= 0) {
+            textureObject = textureObjects[texture.source];
+          }
+        }
+
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, textureObject);
+        glUniform1i(uOcclusionTexture, 3);
+      }
+
+
+    } else {
+      // Apply default material
+      // Defined here:
+      // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#reference-material
+      // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#reference-pbrmetallicroughness3
+      if (uBaseColorFactor >= 0) {
+        glUniform4f(uBaseColorFactor, 1, 1, 1, 1);
+      }
+
+      if (uBaseColorTexture >= 0) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glUniform1i(uBaseColorTexture, whiteTexture);
+      }
+      if (uMetallicFactor >= 0) {
+        glUniform1f(uMetallicFactor, 1.f);
+      }
+      if (uRoughnessFactor >= 0) {
+        glUniform1f(uRoughnessFactor, 1.f);
+      }
+      if (uMetallicRoughnessTexture >= 0) {
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glUniform1i(uMetallicRoughnessTexture, 1);
+      }
+      if (uEmissiveFactor >= 0) {
+        glUniform3f(uEmissiveFactor, 0.f, 0.f, 0.f);
+      }
+      if (uEmissiveTexture >= 0) {
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glUniform1i(uEmissiveTexture, 2);
+      }
+      if (uOcclusionStrength >= 0) {
+        glUniform1f(uOcclusionStrength, 0.f);
+      }
+      if (uOcclusionTexture >= 0) {
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glUniform1i(uOcclusionTexture, 3);
+      }
+
+
+    }
+  };
 
   // Lambda function to draw the scene
   const auto drawScene = [&](const Camera &camera) {
@@ -112,15 +286,23 @@ int ViewerApplication::run()
                 glm::value_ptr(modelViewMatrix));
             glUniformMatrix4fv(normalMatrixLocation, 1, GL_FALSE,
                 glm::value_ptr(normalMatrix));
-            if (lightFromCamera) {
-              glUniform3f(lightDirection, 0, 0, 1);
-            } else {
-              const auto lightDirectionInViewSpace = glm::normalize(
-                  glm::vec3(viewMatrix * glm::vec4(lightDir, 0.)));
-              glUniform3f(lightDirection, lightDirectionInViewSpace[0],
-                  lightDirectionInViewSpace[1], lightDirectionInViewSpace[2]);
+            if(ulightDirection >= 0) {
+              if (lightFromCamera) {
+                glUniform3f(ulightDirection, 0, 0, 1);
+              } else {
+                const auto lightDirectionInViewSpace = glm::normalize(
+                    glm::vec3(viewMatrix * glm::vec4(lightDir, 0.)));
+                glUniform3f(ulightDirection, lightDirectionInViewSpace[0],
+                    lightDirectionInViewSpace[1], lightDirectionInViewSpace[2]);
+              }
             }
-            glUniform3fv(lightIntensity, 1, glm::value_ptr(lightInt));
+            if(ulightIntensity >= 0) {
+              glUniform3fv(ulightIntensity, 1, glm::value_ptr(lightInt));
+            }
+                if (uApplyOcclusion >= 0) {
+      glUniform1i(uApplyOcclusion, applyOcclusion);
+    }
+
 
             // get mesh an draw every primitives
             auto v_mesh = model.meshes[v_node.mesh];
@@ -129,6 +311,7 @@ int ViewerApplication::run()
             for (int i = 0; i < v_mesh.primitives.size(); ++i) {
               auto v_vao = vertexArrayObjects[v_vaoRange.begin + i];
               auto primitive = v_mesh.primitives[i];
+              bindMaterial(primitive.material);
               glBindVertexArray(v_vao);
               if (primitive.indices >= 0) {
                 const auto &accessor = model.accessors[primitive.indices];
@@ -247,6 +430,7 @@ int ViewerApplication::run()
         }
       }
       ImGui::Checkbox("light from camera", &lightFromCamera);
+      ImGui::Checkbox("apply occlusion", &applyOcclusion);
       ImGui::End();
     }
 
@@ -325,6 +509,56 @@ bool ViewerApplication::loadGltfFile(tinygltf::Model &model)
 
   return ret;
 }
+
+std::vector<GLuint> ViewerApplication::createTextureObjects(
+    const tinygltf::Model &model) const
+{
+  std::vector<GLuint> textureObjects(model.textures.size(), 0);
+
+  // default sampler:
+  // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#texturesampler
+  // "When undefined, a sampler with repeat wrapping and auto filtering should
+  // be used."
+  tinygltf::Sampler defaultSampler;
+  defaultSampler.minFilter = GL_LINEAR;
+  defaultSampler.magFilter = GL_LINEAR;
+  defaultSampler.wrapS = GL_REPEAT;
+  defaultSampler.wrapT = GL_REPEAT;
+  defaultSampler.wrapR = GL_REPEAT;
+
+  glActiveTexture(GL_TEXTURE0);
+
+  glGenTextures(GLsizei(model.textures.size()), textureObjects.data());
+  for (size_t i = 0; i < model.textures.size(); ++i) {
+    const auto &texture = model.textures[i];
+    assert(texture.source >= 0);
+    const auto &image = model.images[texture.source];
+
+    const auto &sampler =
+        texture.sampler >= 0 ? model.samplers[texture.sampler] : defaultSampler;
+    glBindTexture(GL_TEXTURE_2D, textureObjects[i]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0,
+        GL_RGBA, image.pixel_type, image.image.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+        sampler.minFilter != -1 ? sampler.minFilter : GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+        sampler.magFilter != -1 ? sampler.magFilter : GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, sampler.wrapS);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, sampler.wrapT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, sampler.wrapR);
+
+    if (sampler.minFilter == GL_NEAREST_MIPMAP_NEAREST ||
+        sampler.minFilter == GL_NEAREST_MIPMAP_LINEAR ||
+        sampler.minFilter == GL_LINEAR_MIPMAP_NEAREST ||
+        sampler.minFilter == GL_LINEAR_MIPMAP_LINEAR) {
+      glGenerateMipmap(GL_TEXTURE_2D);
+    }
+  }
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  return textureObjects;
+}
+
 
 std::vector<GLuint> ViewerApplication::createBufferObjects(
     const tinygltf::Model &model)
