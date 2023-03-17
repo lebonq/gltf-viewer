@@ -23,19 +23,15 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Push">
-      <change afterPath="$PROJECT_DIR$/src/shaders/shadowMapShader.fs.glsl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/shaders/shadowMapShader.vs.glsl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/shaders/simpleDepthShader.fs.glsl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/shaders/simpleDepthShader.vs.glsl" afterDir="false" />
+    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="First try of shadow mapping">
+      <change afterPath="$PROJECT_DIR$/src/shaders/debug.fs.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ViewerApplication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ViewerApplication.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shaders/diffuse_directional_light.fs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/diffuse_directional_light.fs.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shaders/forward.vs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/forward.vs.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shaders/magenta.fs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/magenta.fs.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shaders/normals.fs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/normals.fs.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/shaders/pbr_directional_light.fs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/pbr_directional_light.fs.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shaders/shadowMapShader.fs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/shadowMapShader.fs.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shaders/shadowMapShader.vs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/shadowMapShader.vs.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shaders/simpleDepthShader.vs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/simpleDepthShader.vs.glsl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,12 +89,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.View Helmet">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="CMake Application.View Sponza">
     <configuration name="Render Helmet" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf --lookat 0,0,2.29362,0,-0.0898785,1.29767,0,0.995953,-0.0898785 --output helmet.png --w 3000 --h 2000" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -170,7 +161,8 @@
       <workItem from="1679047857528" duration="3608000" />
       <workItem from="1679055137821" duration="48000" />
       <workItem from="1679055607939" duration="1103000" />
-      <workItem from="1679056778737" duration="9432000" />
+      <workItem from="1679056778737" duration="13469000" />
+      <workItem from="1679082666066" duration="5000" />
     </task>
     <task id="LOCAL-00001" summary="Add loadGltf and createBufferObjects">
       <created>1673517456196</created>
@@ -228,7 +220,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679040074764</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="First try of shadow mapping">
+      <created>1679067948988</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1679067948988</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -253,6 +252,7 @@
     <MESSAGE value="Add trackball and new camera controller" />
     <MESSAGE value="Add directionnal light" />
     <MESSAGE value="Push" />
-    <option name="LAST_COMMIT_MESSAGE" value="Push" />
+    <MESSAGE value="First try of shadow mapping" />
+    <option name="LAST_COMMIT_MESSAGE" value="First try of shadow mapping" />
   </component>
 </project>

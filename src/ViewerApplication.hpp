@@ -55,7 +55,7 @@ private:
   GLint m_uApplyOcclusion;
   GLint m_uLightSpaceMatrix;
 
-  const GLuint SHADOW_WIDTH = 4096, SHADOW_HEIGHT = 4096;
+  const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
   GLuint m_depthMapFBO;
   GLuint m_depthMap;
 

@@ -1,0 +1,86 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"CMakePresetLoader\">{\n  &quot;useNewFormat&quot;: true\n}</component>\n  <component name=\"CMakeReloadState\">\n    <option name=\"reloaded\" value=\"true\" />\n  </component>\n  <component name=\"CMakeRunConfigurationManager\">\n    <generated>\n      <config projectName=\"gltf-viewer\" targetName=\"uninstall\" />\n      <config projectName=\"gltf-viewer\" targetName=\"glfw\" />\n      <config projectName=\"gltf-viewer\" targetName=\"gltf-viewer\" />\n    </generated>\n  </component>\n  <component name=\"CMakeSettings\">\n    <configurations>\n      <configuration PROFILE_NAME=\"Debug\" ENABLED=\"true\" CONFIG_NAME=\"Debug\" />\n      <configuration PROFILE_NAME=\"Release\" ENABLED=\"true\" CONFIG_NAME=\"Release\" />\n    </configurations>\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"19de7924-f124-4159-82f0-f1cbf3d8c564\" name=\"Changes\" comment=\"Push occlusion\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/Data.hpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/Data.hpp\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/ViewerApplication.cpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/ViewerApplication.cpp\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/ViewerApplication.hpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/ViewerApplication.hpp\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"ExecutionTargetManager\" SELECTED_TARGET=\"CMakeBuildProfile:Debug\" />\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"tutorial-v1\" />\n      </map>\n    </option>\n  </component>\n  <component name=\"MarkdownSettingsMigration\">\n    <option name=\"stateVersion\" value=\"1\" />\n  </component>\n  <component name=\"ProblemsViewState\">\n    <option name=\"selectedTabId\" value=\"ProjectErrors\" />\n  </component>\n  <component name=\"ProjectId\" id=\"2Ju0ZFxdb0g28YK4O1wHkVJNW6o\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,\n    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,\n    &quot;cf.advertisement.text.overridden&quot;: &quot;true&quot;,\n    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,\n    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,\n    &quot;last_opened_file_path&quot;: &quot;/home/lebonq/Synthese-Avancee/gltf-viewer&quot;,\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\n    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,\n    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\n  }\n}</component>\n  <component name=\"RecentsManager\">\n    <key name=\"MoveFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/src\" />\n    </key>\n  </component>\n  <component name=\"RunManager\" selected=\"CMake Application.View Sponza\">\n    <configuration name=\"Render Helmet\" type=\"CMakeRunConfiguration\" factoryName=\"Application\" PROGRAM_PARAMS=\"viewer assets/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf --lookat 0,0,2.29362,0,-0.0898785,1.29767,0,0.995953,-0.0898785 --output helmet.png\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"gltf-viewer\" TARGET_NAME=\"gltf-viewer\" CONFIG_NAME=\"Debug\" RUN_TARGET_PROJECT_NAME=\"gltf-viewer\" RUN_TARGET_NAME=\"gltf-viewer\">\n      <method v=\"2\">\n        <option name=\"com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"Render Sponza\" type=\"CMakeRunConfiguration\" factoryName=\"Application\" PROGRAM_PARAMS=\"viewer assets/2.0/Sponza/glTF/Sponza.gltf --lookat 6.00989,4.61461,-0.00445333,-2.55757,4.75953,0.145774,0.0169079,0.999857,-0.000296474 --output sponza.png\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"gltf-viewer\" TARGET_NAME=\"gltf-viewer\" CONFIG_NAME=\"Debug\" RUN_TARGET_PROJECT_NAME=\"gltf-viewer\" RUN_TARGET_NAME=\"gltf-viewer\">\n      <method v=\"2\">\n        <option name=\"com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"View Helmet\" type=\"CMakeRunConfiguration\" factoryName=\"Application\" PROGRAM_PARAMS=\"viewer assets/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf --lookat 0,0,2.29362,0,-0.0898785,1.29767,0,0.995953,-0.0898785\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"gltf-viewer\" TARGET_NAME=\"gltf-viewer\" CONFIG_NAME=\"Debug\" RUN_TARGET_PROJECT_NAME=\"gltf-viewer\" RUN_TARGET_NAME=\"gltf-viewer\">\n      <method v=\"2\">\n        <option name=\"com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"View Sponza\" type=\"CMakeRunConfiguration\" factoryName=\"Application\" PROGRAM_PARAMS=\"viewer assets/2.0/Sponza/glTF/Sponza.gltf --lookat -7.78261,4.45689,-0.570294,-6.79082,4.55365,-0.486718,-0.0975951,0.995214,0.0061446\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"gltf-viewer\" TARGET_NAME=\"gltf-viewer\" CONFIG_NAME=\"Debug\" RUN_TARGET_PROJECT_NAME=\"gltf-viewer\" RUN_TARGET_NAME=\"gltf-viewer\">\n      <method v=\"2\">\n        <option name=\"com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"glfw\" type=\"CMakeRunConfiguration\" factoryName=\"Application\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"gltf-viewer\" TARGET_NAME=\"glfw\" CONFIG_NAME=\"Debug\">\n      <method v=\"2\">\n        <option name=\"com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"uninstall\" type=\"CMakeRunConfiguration\" factoryName=\"Application\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"gltf-viewer\" TARGET_NAME=\"uninstall\" CONFIG_NAME=\"Debug\">\n      <method v=\"2\">\n        <option name=\"com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <list>\n      <item itemvalue=\"CMake Application.View Helmet\" />\n      <item itemvalue=\"CMake Application.Render Helmet\" />\n      <item itemvalue=\"CMake Application.View Sponza\" />\n      <item itemvalue=\"CMake Application.Render Sponza\" />\n      <item itemvalue=\"CMake Application.uninstall\" />\n      <item itemvalue=\"CMake Application.glfw\" />\n    </list>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"19de7924-f124-4159-82f0-f1cbf3d8c564\" name=\"Changes\" comment=\"\" />\n      <created>1672912370309</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1672912370309</updated>\n      <workItem from=\"1672912377364\" duration=\"328000\" />\n      <workItem from=\"1672912724076\" duration=\"4692000\" />\n      <workItem from=\"1672945705746\" duration=\"80000\" />\n      <workItem from=\"1673008798570\" duration=\"152000\" />\n      <workItem from=\"1673270034062\" duration=\"633000\" />\n      <workItem from=\"1673272926801\" duration=\"993000\" />\n      <workItem from=\"1673510133776\" duration=\"3272000\" />\n      <workItem from=\"1673515738364\" duration=\"5872000\" />\n      <workItem from=\"1673962551507\" duration=\"917000\" />\n      <workItem from=\"1674481564520\" duration=\"22000\" />\n      <workItem from=\"1674493317732\" duration=\"43000\" />\n      <workItem from=\"1674652470567\" duration=\"11110000\" />\n      <workItem from=\"1678354602427\" duration=\"1558000\" />\n      <workItem from=\"1678357472893\" duration=\"1784000\" />\n      <workItem from=\"1678981394344\" duration=\"3171000\" />\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"Add loadGltf and createBufferObjects\">\n      <created>1673517456196</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1673517456196</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"Add creation of vertexArrayObjects\">\n      <created>1674656648512</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1674656648512</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"Add Draw Function\">\n      <created>1674661629342</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1674661629342</updated>\n    </task>\n    <task id=\"LOCAL-00004\" summary=\"Add trackball\">\n      <created>1678360630832</created>\n      <option name=\"number\" value=\"00004\" />\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1678360630832</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"5\" />\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"Add loadGltf and createBufferObjects\" />\n    <MESSAGE value=\"Add creation of vertexArrayObjects\" />\n    <MESSAGE value=\"Add Draw Function\" />\n    <MESSAGE value=\"Add trackball\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Add trackball\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -23,11 +23,9 @@
+     </configurations>
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Push occlusion">
++    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Push">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/Data.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Data.hpp" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/ViewerApplication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.cpp" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/ViewerApplication.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.hpp" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/utils/shaders.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/shaders.hpp" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -35,6 +33,13 @@
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+   </component>
+   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
++  <component name="FileTemplateManagerImpl">
++    <option name="RECENT_TEMPLATES">
++      <list>
++        <option value="GLSL Shader" />
++      </list>
++    </option>
++  </component>
+   <component name="Git.Settings">
+     <option name="RECENT_BRANCH_BY_REPOSITORY">
+       <map>
+@@ -78,6 +83,11 @@
+     </key>
+   </component>
+   <component name="RunManager" selected="CMake Application.View Sponza">
++    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
++      <method v="2">
++        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
++      </method>
++    </configuration>
+     <configuration name="Render Helmet" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer assets/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf --lookat 0,0,2.29362,0,-0.0898785,1.29767,0,0.995953,-0.0898785 --output helmet.png" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+       <method v="2">
+         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+@@ -139,7 +149,8 @@
+       <workItem from="1674652470567" duration="11110000" />
+       <workItem from="1678354602427" duration="1558000" />
+       <workItem from="1678357472893" duration="1784000" />
+-      <workItem from="1678981394344" duration="3171000" />
++      <workItem from="1678981394344" duration="3191000" />
++      <workItem from="1679037461766" duration="1276000" />
+     </task>
+     <task id="LOCAL-00001" summary="Add loadGltf and createBufferObjects">
+       <created>1673517456196</created>
+@@ -169,7 +180,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1678360630832</updated>
+     </task>
+-    <option name="localTasksCounter" value="5" />
++    <task id="LOCAL-00005" summary="Push">
++      <created>1678986139979</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1678986139979</updated>
++    </task>
++    <option name="localTasksCounter" value="6" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -191,6 +209,7 @@
+     <MESSAGE value="Add creation of vertexArrayObjects" />
+     <MESSAGE value="Add Draw Function" />
+     <MESSAGE value="Add trackball" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Add trackball" />
++    <MESSAGE value="Push" />
++    <option name="LAST_COMMIT_MESSAGE" value="Push" />
+   </component>
+ </project>
+\ No newline at end of file

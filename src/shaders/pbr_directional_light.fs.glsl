@@ -8,7 +8,7 @@
 in vec3 vViewSpacePosition;
 in vec3 vViewSpaceNormal;
 in vec2 vTexCoords;
-
+in vec4 vFragPosLightSpace;
 in vec3 vFragPos;
 
 // Here we use vTexCoords but we should use vTexCoords1 or vTexCoords2 depending
@@ -123,7 +123,7 @@ void main()
   vec3 color = (f_diffuse + f_specular) * uLightIntensity * NdotL;
   color += emissive;
 
-  vec4 positionInDirLightScreen = uLightSpaceMatrix * vec4(vFragPos, 1); // Compute fragment position in NDC space of light
+  vec4 positionInDirLightScreen = uLightSpaceMatrix * vFragPosLightSpace; // Compute fragment position in NDC space of light
   vec3 positionInDirLightNDC = vec3(positionInDirLightScreen / positionInDirLightScreen.w) * 0.5 + 0.5; // Homogeneize + put between 0 and 1
   float depthBlockerInDirSpace = texture(uDirLightShadowMap, positionInDirLightNDC.xy).r;
   float dirLightVisibility = positionInDirLightNDC.z < depthBlockerInDirSpace + 0.5 ? 1.0 : 0.0; //0.5 is shadow bias

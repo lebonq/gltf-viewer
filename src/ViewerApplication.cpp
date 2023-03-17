@@ -326,7 +326,8 @@ int ViewerApplication::run()
                                // colinear to lightUpVector
     const auto dirLightProjMatrix = glm::ortho(-sceneRadius, sceneRadius,
         -sceneRadius, sceneRadius, 0.01f * sceneRadius, 2.f * sceneRadius);
-    const auto lightSpaceMatrix = dirLightProjMatrix * dirLightViewMatrix;
+    const auto rcpViewMatrix = m_userCamera.getViewMatrix(); // Inverse de la view matrix de la caméra
+    const auto lightSpaceMatrix = dirLightProjMatrix * dirLightViewMatrix * rcpViewMatrix;
 
     m_vertexShader = "simpleDepthShader.vs.glsl";
     m_fragmentShader = "simpleDepthShader.fs.glsl";
