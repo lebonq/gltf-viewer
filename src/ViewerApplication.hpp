@@ -6,6 +6,9 @@
 #include "utils/filesystem.hpp"
 #include "utils/shaders.hpp"
 
+  static float lightTheta = 0.f;
+  static float lightPhi = 0.f;
+
 class ViewerApplication
 {
 public:
@@ -32,8 +35,31 @@ private:
   const fs::path m_ShadersRootPath;
 
   fs::path m_gltfFilePath;
-  std::string m_vertexShader = "forward.vs.glsl";
+  std::string m_vertexShader = "shadowMapShader.vs.glsl";
   std::string m_fragmentShader = "pbr_directional_light.fs.glsl";
+
+  GLint m_uViewMatrixLocation;
+  GLint m_uProjectionMatrixLocation;
+  GLint m_uModelMatrixLocation;
+  GLint m_ulightDirection;
+  GLint m_ulightIntensity;
+  GLint m_uBaseColorTexture;
+  GLint m_uBaseColorFactor;
+  GLint m_uMetallicRoughnessTexture;
+  GLint m_uMetallicFactor;
+  GLint m_uRoughnessFactor;
+  GLint m_uEmissiveTexture;
+  GLint m_uEmissiveFactor;
+  GLint m_uOcclusionTexture;
+  GLint m_uOcclusionStrength;
+  GLint m_uApplyOcclusion;
+  GLint m_uLightSpaceMatrix;
+
+  const GLuint SHADOW_WIDTH = 4096, SHADOW_HEIGHT = 4096;
+  GLuint m_depthMapFBO;
+  GLuint m_depthMap;
+
+  glm::vec3 m_bboxMin, m_bboxMax;
 
   bool m_hasUserCamera = false;
   Camera m_userCamera;
@@ -46,12 +72,16 @@ private:
   GLFWHandle m_GLFWHandle{int(m_nWindowWidth), int(m_nWindowHeight),
       "glTF Viewer",
       m_OutputPath.empty()}; // show the window only if m_OutputPath is empty
+
+  GLProgram m_glslProgram;
+
   bool loadGltfFile(tinygltf::Model & model);
   std::vector<GLuint> createTextureObjects(const tinygltf::Model &model) const;
   std::vector<GLuint> createBufferObjects(const tinygltf::Model &model);
   std::vector<GLuint> createVertexArrayObjects(const tinygltf::Model &model,
   const std::vector<GLuint> &bufferObjects,
   std::vector<VaoRange> &meshIndexToVaoRange);
+  void loadShaderPrograms();
   /*
     ! THE ORDER OF DECLARATION OF MEMBER VARIABLES IS IMPORTANT !
     - m_ImGuiIniFilename.c_str() will be used by ImGUI in ImGui::Shutdown, which
@@ -63,4 +93,13 @@ private:
     the creation of a GLFW windows and thus a GL context which must exists
     before most of OpenGL function calls.
   */
+  void createShdowmap();
+};
+
+static const auto computeDirectionVectorUp = [](float phiRadians, float thetaRadians)
+{
+    const auto cosPhi = glm::cos(phiRadians);
+    const auto sinPhi = glm::sin(phiRadians);
+    const auto cosTheta = glm::cos(thetaRadians);
+    return -glm::normalize(glm::vec3(sinPhi * cosTheta, -glm::sin(thetaRadians), cosPhi * cosTheta));
 };

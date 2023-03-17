@@ -1,4 +1,4 @@
-#version 330
+#version 330 core
 
 // A reference implementation can be found here:
 // https://github.com/KhronosGroup/glTF-Sample-Viewer/blob/master/src/shaders/metallic-roughness.frag
@@ -8,6 +8,9 @@
 in vec3 vViewSpacePosition;
 in vec3 vViewSpaceNormal;
 in vec2 vTexCoords;
+
+in vec3 vFragPos;
+
 // Here we use vTexCoords but we should use vTexCoords1 or vTexCoords2 depending
 // on the material because glTF can handle two texture coordinates sets per
 // object see
@@ -27,6 +30,9 @@ uniform sampler2D uBaseColorTexture;
 uniform sampler2D uMetallicRoughnessTexture;
 uniform sampler2D uEmissiveTexture;
 uniform sampler2D uOcclusionTexture;
+
+uniform mat4 uLightSpaceMatrix;
+uniform sampler2D uDirLightShadowMap;
 
 uniform int uApplyOcclusion;
 
@@ -83,23 +89,23 @@ void main()
   vec3 black = vec3(0.);
 
   vec3 c_diff =
-      mix(baseColor.rgb * (1 - dielectricSpecular.r), black, metallic);
+      mix(baseColor.rgb * (1. - dielectricSpecular.r), black, metallic);
   vec3 F_0 = mix(vec3(dielectricSpecular), baseColor.rgb, metallic);
   float alpha = roughness * roughness;
 
   float VdotH = clamp(dot(V, H), 0., 1.);
-  float baseShlickFactor = 1 - VdotH;
+  float baseShlickFactor = 1. - VdotH;
   float shlickFactor = baseShlickFactor * baseShlickFactor; // power 2
   shlickFactor *= shlickFactor;                             // power 4
   shlickFactor *= baseShlickFactor;                         // power 5
-  vec3 F = F_0 + (vec3(1) - F_0) * shlickFactor;
+  vec3 F = F_0 + (vec3(1.) - F_0) * shlickFactor;
 
   float sqrAlpha = alpha * alpha;
   float NdotL = clamp(dot(N, L), 0., 1.);
   float NdotV = clamp(dot(N, V), 0., 1.);
   float visDenominator =
-      NdotL * sqrt(NdotV * NdotV * (1 - sqrAlpha) + sqrAlpha) +
-      NdotV * sqrt(NdotL * NdotL * (1 - sqrAlpha) + sqrAlpha);
+      NdotL * sqrt(NdotV * NdotV * (1. - sqrAlpha) + sqrAlpha) +
+      NdotV * sqrt(NdotL * NdotL * (1. - sqrAlpha) + sqrAlpha);
   float Vis = visDenominator > 0. ? 0.5 / visDenominator : 0.0;
 
   float NdotH = clamp(dot(N, H), 0., 1.);
@@ -116,6 +122,13 @@ void main()
 
   vec3 color = (f_diffuse + f_specular) * uLightIntensity * NdotL;
   color += emissive;
+
+  vec4 positionInDirLightScreen = uLightSpaceMatrix * vec4(vFragPos, 1); // Compute fragment position in NDC space of light
+  vec3 positionInDirLightNDC = vec3(positionInDirLightScreen / positionInDirLightScreen.w) * 0.5 + 0.5; // Homogeneize + put between 0 and 1
+  float depthBlockerInDirSpace = texture(uDirLightShadowMap, positionInDirLightNDC.xy).r;
+  float dirLightVisibility = positionInDirLightNDC.z < depthBlockerInDirSpace + 0.5 ? 1.0 : 0.0; //0.5 is shadow bias
+
+  color *= dirLightVisibility;
 
   if (1 == uApplyOcclusion) {
     float ao = texture2D(uOcclusionTexture, vTexCoords).r;

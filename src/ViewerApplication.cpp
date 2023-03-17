@@ -26,46 +26,12 @@ void keyCallback(
 
 int ViewerApplication::run()
 {
-  // Loader shaders
-  const auto glslProgram = compileProgram({m_ShadersRootPath / m_vertexShader,
-      m_ShadersRootPath / m_fragmentShader});
-
-  const auto modelViewProjMatrixLocation =
-      glGetUniformLocation(glslProgram.glId(), "uModelViewProjMatrix");
-  const auto modelViewMatrixLocation =
-      glGetUniformLocation(glslProgram.glId(), "uModelViewMatrix");
-  const auto normalMatrixLocation =
-      glGetUniformLocation(glslProgram.glId(), "uNormalMatrix");
-  const auto ulightDirection =
-      glGetUniformLocation(glslProgram.glId(), "uLightDirection");
-  const auto ulightIntensity =
-      glGetUniformLocation(glslProgram.glId(), "uLightIntensity");
-  const auto uBaseColorTexture =
-      glGetUniformLocation(glslProgram.glId(), "uBaseColorTexture");
-  const auto uBaseColorFactor =
-      glGetUniformLocation(glslProgram.glId(), "uBaseColorFactor");
-  const auto uMetallicRoughnessTexture =
-      glGetUniformLocation(glslProgram.glId(), "uMetallicRoughnessTexture");
-  const auto uMetallicFactor =
-      glGetUniformLocation(glslProgram.glId(), "uMetallicFactor");
-  const auto uRoughnessFactor =
-      glGetUniformLocation(glslProgram.glId(), "uRoughnessFactor");
-  const auto uEmissiveTexture =
-      glGetUniformLocation(glslProgram.glId(), "uEmissiveTexture");
-  const auto uEmissiveFactor =
-      glGetUniformLocation(glslProgram.glId(), "uEmissiveFactor");
-    const auto uOcclusionTexture =
-      glGetUniformLocation(glslProgram.glId(), "uOcclusionTexture");
-  const auto uOcclusionStrength =
-      glGetUniformLocation(glslProgram.glId(), "uOcclusionStrength");
-  const auto uApplyOcclusion =
-      glGetUniformLocation(glslProgram.glId(), "uApplyOcclusion");
+  loadShaderPrograms();
 
   glm::vec3 lightDir = glm::vec3(1.0f, 1.0f, 1.0f);
   glm::vec3 lightInt = glm::vec3(1.0f, 1.0f, 1.0f);
   bool lightFromCamera = false;
   bool applyOcclusion = true;
-
 
   // Build projection matrix
   std::cerr << "Load model" << this->m_gltfFilePath << std::endl;
@@ -74,22 +40,23 @@ int ViewerApplication::run()
     return -1;
   }
   std::cerr << "Loaded" << std::endl;
-  glm::vec3 bboxMin, bboxMax;
-  computeSceneBounds(model, bboxMin, bboxMax);
 
-  const auto diag = bboxMax - bboxMin;
+  computeSceneBounds(model, m_bboxMin, m_bboxMax);
+
+  const auto diag = m_bboxMax - m_bboxMin;
   auto maxDistance = glm::length(diag);
 
   const auto projMatrix =
       glm::perspective(70.f, float(m_nWindowWidth) / m_nWindowHeight,
           0.001f * maxDistance, 1.5f * maxDistance);
 
-  std::unique_ptr<CameraController> cameraController = std::make_unique<TrackballCameraController>(
-      m_GLFWHandle.window(), 0.5f * maxDistance);
+  std::unique_ptr<CameraController> cameraController =
+      std::make_unique<TrackballCameraController>(
+          m_GLFWHandle.window(), 0.5f * maxDistance);
   if (m_hasUserCamera) {
     cameraController->setCamera(m_userCamera);
   } else {
-    const auto center = 0.5f * (bboxMax + bboxMin);
+    const auto center = 0.5f * (m_bboxMax + m_bboxMin);
     const auto up = glm::vec3(0, 1, 0);
     const auto eye =
         diag.z > 0 ? center + diag : center + 2.f * glm::cross(diag, up);
@@ -100,7 +67,7 @@ int ViewerApplication::run()
   auto textureObjects = createTextureObjects(model);
   std::cerr << "Loadded" << std::endl;
 
-   GLuint whiteTexture = 0;
+  GLuint whiteTexture = 0;
 
   // Create white texture for object with no base color texture
   glGenTextures(1, &whiteTexture);
@@ -114,6 +81,7 @@ int ViewerApplication::run()
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
   glBindTexture(GL_TEXTURE_2D, 0);
 
+  createShdowmap();
 
   std::cerr << "Create Buffer Objects" << std::endl;
   auto v_bufferObjects = createBufferObjects(model);
@@ -127,22 +95,21 @@ int ViewerApplication::run()
 
   // Setup OpenGL state for rendering
   glEnable(GL_DEPTH_TEST);
-  glslProgram.use();
 
-  //Lambda function to bind material
-  const auto bindMaterial = [&](const auto materialIndex){
+  // Lambda function to bind material
+  const auto bindMaterial = [&](const auto materialIndex) {
     if (materialIndex >= 0) {
       const auto &material = model.materials[materialIndex];
       const auto &pbrMetallicRoughness = material.pbrMetallicRoughness;
-      if (uBaseColorFactor >= 0) {
-        glUniform4f(uBaseColorFactor,
+      if (m_uBaseColorFactor >= 0) {
+        glUniform4f(m_uBaseColorFactor,
             (float)pbrMetallicRoughness.baseColorFactor[0],
             (float)pbrMetallicRoughness.baseColorFactor[1],
             (float)pbrMetallicRoughness.baseColorFactor[2],
             (float)pbrMetallicRoughness.baseColorFactor[3]);
       }
 
-      if (uBaseColorTexture >= 0) {
+      if (m_uBaseColorTexture >= 0) {
         auto textureObject = whiteTexture;
         if (pbrMetallicRoughness.baseColorTexture.index >= 0) {
           const auto &texture =
@@ -154,17 +121,17 @@ int ViewerApplication::run()
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textureObject);
-        glUniform1i(uBaseColorTexture, 0);
+        glUniform1i(m_uBaseColorTexture, 0);
       }
-            if (uMetallicFactor >= 0) {
+      if (m_uMetallicFactor >= 0) {
         glUniform1f(
-            uMetallicFactor, (float)pbrMetallicRoughness.metallicFactor);
+            m_uMetallicFactor, (float)pbrMetallicRoughness.metallicFactor);
       }
-      if (uRoughnessFactor >= 0) {
+      if (m_uRoughnessFactor >= 0) {
         glUniform1f(
-            uRoughnessFactor, (float)pbrMetallicRoughness.roughnessFactor);
+            m_uRoughnessFactor, (float)pbrMetallicRoughness.roughnessFactor);
       }
-      if (uMetallicRoughnessTexture >= 0) {
+      if (m_uMetallicRoughnessTexture >= 0) {
         auto textureObject = 0u;
         if (pbrMetallicRoughness.metallicRoughnessTexture.index >= 0) {
           const auto &texture =
@@ -177,14 +144,14 @@ int ViewerApplication::run()
 
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, textureObject);
-        glUniform1i(uMetallicRoughnessTexture, 1);
+        glUniform1i(m_uMetallicRoughnessTexture, 1);
       }
-      if (uEmissiveFactor >= 0) {
-        glUniform3f(uEmissiveFactor, (float)material.emissiveFactor[0],
+      if (m_uEmissiveFactor >= 0) {
+        glUniform3f(m_uEmissiveFactor, (float)material.emissiveFactor[0],
             (float)material.emissiveFactor[1],
             (float)material.emissiveFactor[2]);
       }
-      if (uEmissiveTexture >= 0) {
+      if (m_uEmissiveTexture >= 0) {
         auto textureObject = 0u;
         if (material.emissiveTexture.index >= 0) {
           const auto &texture = model.textures[material.emissiveTexture.index];
@@ -195,13 +162,13 @@ int ViewerApplication::run()
 
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, textureObject);
-        glUniform1i(uEmissiveTexture, 2);
+        glUniform1i(m_uEmissiveTexture, 2);
       }
-      if (uOcclusionStrength >= 0) {
+      if (m_uOcclusionStrength >= 0) {
         glUniform1f(
-            uOcclusionStrength, (float)material.occlusionTexture.strength);
+            m_uOcclusionStrength, (float)material.occlusionTexture.strength);
       }
-      if (uOcclusionTexture >= 0) {
+      if (m_uOcclusionTexture >= 0) {
         auto textureObject = whiteTexture;
         if (material.occlusionTexture.index >= 0) {
           const auto &texture = model.textures[material.occlusionTexture.index];
@@ -212,63 +179,55 @@ int ViewerApplication::run()
 
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, textureObject);
-        glUniform1i(uOcclusionTexture, 3);
+        glUniform1i(m_uOcclusionTexture, 3);
       }
-
 
     } else {
       // Apply default material
       // Defined here:
       // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#reference-material
       // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#reference-pbrmetallicroughness3
-      if (uBaseColorFactor >= 0) {
-        glUniform4f(uBaseColorFactor, 1, 1, 1, 1);
+      if (m_uBaseColorFactor >= 0) {
+        glUniform4f(m_uBaseColorFactor, 1, 1, 1, 1);
       }
 
-      if (uBaseColorTexture >= 0) {
+      if (m_uBaseColorTexture >= 0) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glUniform1i(uBaseColorTexture, whiteTexture);
+        glUniform1i(m_uBaseColorTexture, whiteTexture);
       }
-      if (uMetallicFactor >= 0) {
-        glUniform1f(uMetallicFactor, 1.f);
+      if (m_uMetallicFactor >= 0) {
+        glUniform1f(m_uMetallicFactor, 1.f);
       }
-      if (uRoughnessFactor >= 0) {
-        glUniform1f(uRoughnessFactor, 1.f);
+      if (m_uRoughnessFactor >= 0) {
+        glUniform1f(m_uRoughnessFactor, 1.f);
       }
-      if (uMetallicRoughnessTexture >= 0) {
+      if (m_uMetallicRoughnessTexture >= 0) {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glUniform1i(uMetallicRoughnessTexture, 1);
+        glUniform1i(m_uMetallicRoughnessTexture, 1);
       }
-      if (uEmissiveFactor >= 0) {
-        glUniform3f(uEmissiveFactor, 0.f, 0.f, 0.f);
+      if (m_uEmissiveFactor >= 0) {
+        glUniform3f(m_uEmissiveFactor, 0.f, 0.f, 0.f);
       }
-      if (uEmissiveTexture >= 0) {
+      if (m_uEmissiveTexture >= 0) {
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glUniform1i(uEmissiveTexture, 2);
+        glUniform1i(m_uEmissiveTexture, 2);
       }
-      if (uOcclusionStrength >= 0) {
-        glUniform1f(uOcclusionStrength, 0.f);
+      if (m_uOcclusionStrength >= 0) {
+        glUniform1f(m_uOcclusionStrength, 0.f);
       }
-      if (uOcclusionTexture >= 0) {
+      if (m_uOcclusionTexture >= 0) {
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glUniform1i(uOcclusionTexture, 3);
+        glUniform1i(m_uOcclusionTexture, 3);
       }
-
-
     }
   };
 
   // Lambda function to draw the scene
-  const auto drawScene = [&](const Camera &camera) {
-    glViewport(0, 0, m_nWindowWidth, m_nWindowHeight);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    const auto viewMatrix = camera.getViewMatrix();
-
+  const auto drawScene = [&](glm::mat4 viewMatrix) {
     // The recursive function that should draw a node
     // We use a std::function because a simple lambda cannot be recursive
     const std::function<void(int, const glm::mat4 &)> drawNode =
@@ -276,33 +235,28 @@ int ViewerApplication::run()
           auto v_node = model.nodes[nodeIdx];
           glm::mat4 modelMatrix = getLocalToWorldMatrix(v_node, parentMatrix);
           if (v_node.mesh >= 0) {
-            glm::mat4 modelViewMatrix, modelViewProjectionMatrix, normalMatrix;
-            modelViewMatrix = viewMatrix * modelMatrix;
-            modelViewProjectionMatrix = projMatrix * modelViewMatrix;
-            normalMatrix = glm::transpose(glm::inverse(modelViewMatrix));
-            glUniformMatrix4fv(modelViewProjMatrixLocation, 1, GL_FALSE,
-                glm::value_ptr(modelViewProjectionMatrix));
-            glUniformMatrix4fv(modelViewMatrixLocation, 1, GL_FALSE,
-                glm::value_ptr(modelViewMatrix));
-            glUniformMatrix4fv(normalMatrixLocation, 1, GL_FALSE,
-                glm::value_ptr(normalMatrix));
-            if(ulightDirection >= 0) {
+            // send model matrix
+            if (m_uModelMatrixLocation >= 0) {
+              glUniformMatrix4fv(m_uModelMatrixLocation, 1, GL_FALSE,
+                  glm::value_ptr(modelMatrix));
+            }
+
+            if (m_ulightDirection >= 0) {
               if (lightFromCamera) {
-                glUniform3f(ulightDirection, 0, 0, 1);
+                glUniform3f(m_ulightDirection, 0, 0, 1);
               } else {
                 const auto lightDirectionInViewSpace = glm::normalize(
                     glm::vec3(viewMatrix * glm::vec4(lightDir, 0.)));
-                glUniform3f(ulightDirection, lightDirectionInViewSpace[0],
+                glUniform3f(m_ulightDirection, lightDirectionInViewSpace[0],
                     lightDirectionInViewSpace[1], lightDirectionInViewSpace[2]);
               }
             }
-            if(ulightIntensity >= 0) {
-              glUniform3fv(ulightIntensity, 1, glm::value_ptr(lightInt));
+            if (m_ulightIntensity >= 0) {
+              glUniform3fv(m_ulightIntensity, 1, glm::value_ptr(lightInt));
             }
-                if (uApplyOcclusion >= 0) {
-      glUniform1i(uApplyOcclusion, applyOcclusion);
-    }
-
+            if (m_uApplyOcclusion >= 0) {
+              glUniform1i(m_uApplyOcclusion, applyOcclusion);
+            }
 
             // get mesh an draw every primitives
             auto v_mesh = model.meshes[v_node.mesh];
@@ -344,8 +298,9 @@ int ViewerApplication::run()
 
   if (!m_OutputPath.empty()) {
     std::vector<unsigned char> pixels(m_nWindowWidth * m_nWindowHeight * 3);
+    m_glslProgram.use();
     renderToImage(m_nWindowWidth, m_nWindowHeight, 3, pixels.data(),
-        [&]() { drawScene(cameraController->getCamera()); });
+        [&]() { drawScene(cameraController->getCamera().getViewMatrix()); });
     flipImageYAxis(m_nWindowWidth, m_nWindowHeight, 3, pixels.data());
     const auto strPath = m_OutputPath.string();
     stbi_write_png(
@@ -359,7 +314,54 @@ int ViewerApplication::run()
     const auto seconds = glfwGetTime();
 
     const auto camera = cameraController->getCamera();
-    drawScene(camera);
+
+    const auto sceneCenter = 0.5f * (m_bboxMin + m_bboxMax);
+    const float sceneRadius = glm::length((m_bboxMax - m_bboxMin)) * 0.5f;
+
+    const auto dirLightUpVector =
+        computeDirectionVectorUp(lightPhi, lightTheta);
+    const auto dirLightViewMatrix =
+        glm::lookAt(sceneCenter + lightDir * sceneRadius, sceneCenter,
+            dirLightUpVector); // Will not work if m_DirLightDirection is
+                               // colinear to lightUpVector
+    const auto dirLightProjMatrix = glm::ortho(-sceneRadius, sceneRadius,
+        -sceneRadius, sceneRadius, 0.01f * sceneRadius, 2.f * sceneRadius);
+    const auto lightSpaceMatrix = dirLightProjMatrix * dirLightViewMatrix;
+
+    m_vertexShader = "simpleDepthShader.vs.glsl";
+    m_fragmentShader = "simpleDepthShader.fs.glsl";
+    loadShaderPrograms();
+    m_glslProgram.use();
+    glUniformMatrix4fv(
+          m_uLightSpaceMatrix, 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+    glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_depthMapFBO);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    drawScene(dirLightViewMatrix);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    m_vertexShader = "shadowMapShader.vs.glsl";
+    m_fragmentShader = "pbr_directional_light.fs.glsl";
+    loadShaderPrograms();
+    m_glslProgram.use();
+    const auto viewMatrix = camera.getViewMatrix();
+    if (m_uViewMatrixLocation >= 0) {
+      glUniformMatrix4fv(
+          m_uViewMatrixLocation, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+    }
+    if (m_uProjectionMatrixLocation >= 0) {
+      glUniformMatrix4fv(
+          m_uProjectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(projMatrix));
+    }
+    glUniformMatrix4fv(
+      m_uLightSpaceMatrix, 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, m_depthMapFBO);
+
+    glViewport(0, 0, m_nWindowWidth, m_nWindowHeight);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    drawScene(viewMatrix);
 
     // GUI code:
     imguiNewFrame();
@@ -407,9 +409,7 @@ int ViewerApplication::run()
         cameraController->setCamera(currentCamera);
       }
 
-       if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen)) {
-        static float lightTheta = 0.f;
-        static float lightPhi = 0.f;
+      if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen)) {
 
         if (ImGui::SliderFloat("theta", &lightTheta, 0, glm::pi<float>()) ||
             ImGui::SliderFloat("phi", &lightPhi, 0, 2.f * glm::pi<float>())) {
@@ -417,8 +417,7 @@ int ViewerApplication::run()
           const auto cosPhi = glm::cos(lightPhi);
           const auto sinTheta = glm::sin(lightTheta);
           const auto cosTheta = glm::cos(lightTheta);
-          lightDir =
-              glm::vec3(sinTheta * cosPhi, cosTheta, sinTheta * sinPhi);
+          lightDir = glm::vec3(sinTheta * cosPhi, cosTheta, sinTheta * sinPhi);
         }
 
         static glm::vec3 lightColor(1.f, 1.f, 1.f);
@@ -431,6 +430,20 @@ int ViewerApplication::run()
       }
       ImGui::Checkbox("light from camera", &lightFromCamera);
       ImGui::Checkbox("apply occlusion", &applyOcclusion);
+
+      static int renderType = 0;
+      auto renderTypeChanged =
+          ImGui::RadioButton("Full Render", &renderType, 0) ||
+          ImGui::RadioButton("Normal render", &renderType, 1);
+      if (renderTypeChanged) {
+        if (renderType == 0) {
+          m_fragmentShader = "pbr_directional_light.fs.glsl";
+        } else {
+          m_fragmentShader = "normals.fs.glsl";
+        }
+        loadShaderPrograms();
+      }
+
       ImGui::End();
     }
 
@@ -558,7 +571,6 @@ std::vector<GLuint> ViewerApplication::createTextureObjects(
 
   return textureObjects;
 }
-
 
 std::vector<GLuint> ViewerApplication::createBufferObjects(
     const tinygltf::Model &model)
@@ -712,4 +724,54 @@ std::vector<GLuint> ViewerApplication::createVertexArrayObjects(
   std::clog << "Number of VAOs: " << vertexArrayObjects.size() << std::endl;
 
   return vertexArrayObjects;
+}
+
+void ViewerApplication::loadShaderPrograms()
+{
+  // Loader shaders
+  m_glslProgram = compileProgram({m_ShadersRootPath / m_vertexShader,
+      m_ShadersRootPath / m_fragmentShader});
+
+  m_uViewMatrixLocation = m_glslProgram.getUniformLocation("uViewMatrix");
+  m_uProjectionMatrixLocation =
+      m_glslProgram.getUniformLocation("uProjectionMatrix");
+  m_uModelMatrixLocation = m_glslProgram.getUniformLocation("uModelMatrix");
+
+  m_ulightDirection = m_glslProgram.getUniformLocation("uLightDirection");
+  m_ulightIntensity = m_glslProgram.getUniformLocation("uLightIntensity");
+  m_uBaseColorTexture = m_glslProgram.getUniformLocation("uBaseColorTexture");
+  m_uBaseColorFactor = m_glslProgram.getUniformLocation("uBaseColorFactor");
+  m_uMetallicRoughnessTexture =
+      m_glslProgram.getUniformLocation("uMetallicRoughnessTexture");
+  m_uMetallicFactor = m_glslProgram.getUniformLocation("uMetallicFactor");
+  m_uRoughnessFactor = m_glslProgram.getUniformLocation("uRoughnessFactor");
+  m_uEmissiveTexture = m_glslProgram.getUniformLocation("uEmissiveTexture");
+  m_uEmissiveFactor = m_glslProgram.getUniformLocation("uEmissiveFactor");
+  m_uOcclusionTexture = m_glslProgram.getUniformLocation("uOcclusionTexture");
+  m_uOcclusionStrength = m_glslProgram.getUniformLocation("uOcclusionStrength");
+  m_uApplyOcclusion = m_glslProgram.getUniformLocation("uApplyOcclusion");
+  m_uLightSpaceMatrix = m_glslProgram.getUniformLocation("uLightSpaceMatrix");
+}
+
+void ViewerApplication::createShdowmap()
+{
+  glGenFramebuffers(1, &m_depthMapFBO);
+  // create depth texture
+  glGenTextures(1, &m_depthMap);
+  glBindTexture(GL_TEXTURE_2D, m_depthMap);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH,
+      SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+  float borderColor[] = {1.0, 1.0, 1.0, 1.0};
+  glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+  // attach depth texture as FBO's depth buffer
+  glBindFramebuffer(GL_FRAMEBUFFER, m_depthMapFBO);
+  glFramebufferTexture2D(
+      GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthMap, 0);
+  glDrawBuffer(GL_NONE);
+  glReadBuffer(GL_NONE);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
