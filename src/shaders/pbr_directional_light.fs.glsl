@@ -128,11 +128,11 @@ void main()
     float currentDepth = lightCoords.z;
 
     // Smoothens out the shadows
-    int sampleRadius = 2;
+    int radius = 2;
     vec2 pixelSize = 1.0 / textureSize(uDirLightShadowMap, 0);
-    for(int y = -sampleRadius; y <= sampleRadius; y++)
+    for(int y = -radius; y <= radius; y++)
     {
-      for(int x = -sampleRadius; x <= sampleRadius; x++)
+      for(int x = -radius; x <= radius; x++)
       {
         float closestDepth = texture(uDirLightShadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
         if (currentDepth > closestDepth + bias)
@@ -140,7 +140,7 @@ void main()
       }
     }
     // Get average shadow
-    shadow /= pow((sampleRadius * 2 + 1), 2);
+    shadow /= pow((radius * 2 + 1), 2);
   }
 
   vec3 color = (f_diffuse *(1.0f-shadow) + f_specular *(1.0f-shadow)) * uLightIntensity * NdotL;
