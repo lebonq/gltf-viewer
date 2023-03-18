@@ -6,8 +6,8 @@
 #include "utils/filesystem.hpp"
 #include "utils/shaders.hpp"
 
-  static float lightTheta = 0.f;
-  static float lightPhi = 0.f;
+  static float lightTheta = 0.1f;
+  static float lightPhi = 0.1f;
 
 class ViewerApplication
 {
@@ -36,7 +36,7 @@ private:
 
   fs::path m_gltfFilePath;
   std::string m_vertexShader = "shadowMapShader.vs.glsl";
-  std::string m_fragmentShader = "pbr_directional_light.fs.glsl";
+  std::string m_fragmentShader = "debug.fs.glsl";
 
   GLint m_uViewMatrixLocation;
   GLint m_uProjectionMatrixLocation;
@@ -55,7 +55,7 @@ private:
   GLint m_uApplyOcclusion;
   GLint m_uLightSpaceMatrix;
 
-  const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+  const GLuint SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
   GLuint m_depthMapFBO;
   GLuint m_depthMap;
 

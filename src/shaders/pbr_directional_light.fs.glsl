@@ -126,9 +126,9 @@ void main()
   vec4 positionInDirLightScreen = uLightSpaceMatrix * vFragPosLightSpace; // Compute fragment position in NDC space of light
   vec3 positionInDirLightNDC = vec3(positionInDirLightScreen / positionInDirLightScreen.w) * 0.5 + 0.5; // Homogeneize + put between 0 and 1
   float depthBlockerInDirSpace = texture(uDirLightShadowMap, positionInDirLightNDC.xy).r;
-  float dirLightVisibility = positionInDirLightNDC.z < depthBlockerInDirSpace + 0.5 ? 1.0 : 0.0; //0.5 is shadow bias
+  float dirLightVisibility = positionInDirLightNDC.z < depthBlockerInDirSpace + 0.01 ? 1.0 : 0.0; //0.5 is shadow bias
 
-  color *= dirLightVisibility;
+  color = vec3(depthBlockerInDirSpace,depthBlockerInDirSpace,depthBlockerInDirSpace);
 
   if (1 == uApplyOcclusion) {
     float ao = texture2D(uOcclusionTexture, vTexCoords).r;

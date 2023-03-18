@@ -29,6 +29,13 @@ int ViewerApplication::run()
   loadShaderPrograms();
 
   glm::vec3 lightDir = glm::vec3(1.0f, 1.0f, 1.0f);
+  {
+    const auto sinPhi = glm::sin(lightPhi);
+    const auto cosPhi = glm::cos(lightPhi);
+    const auto sinTheta = glm::sin(lightTheta);
+    const auto cosTheta = glm::cos(lightTheta);
+    lightDir = glm::vec3(sinTheta * cosPhi, cosTheta, sinTheta * sinPhi);
+  }
   glm::vec3 lightInt = glm::vec3(1.0f, 1.0f, 1.0f);
   bool lightFromCamera = false;
   bool applyOcclusion = true;
@@ -326,7 +333,7 @@ int ViewerApplication::run()
                                // colinear to lightUpVector
     const auto dirLightProjMatrix = glm::ortho(-sceneRadius, sceneRadius,
         -sceneRadius, sceneRadius, 0.01f * sceneRadius, 2.f * sceneRadius);
-    const auto rcpViewMatrix = m_userCamera.getViewMatrix(); // Inverse de la view matrix de la caméra
+    const auto rcpViewMatrix = glm::inverse(m_userCamera.getViewMatrix()); // Inverse de la view matrix de la caméra
     const auto lightSpaceMatrix = dirLightProjMatrix * dirLightViewMatrix * rcpViewMatrix;
 
     m_vertexShader = "simpleDepthShader.vs.glsl";
@@ -338,11 +345,13 @@ int ViewerApplication::run()
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
     glBindFramebuffer(GL_FRAMEBUFFER, m_depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
+    glCullFace(GL_FRONT);
     drawScene(dirLightViewMatrix);
+    glCullFace(GL_BACK);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     m_vertexShader = "shadowMapShader.vs.glsl";
-    m_fragmentShader = "pbr_directional_light.fs.glsl";
+    m_fragmentShader = "debug.fs.glsl";
     loadShaderPrograms();
     m_glslProgram.use();
     const auto viewMatrix = camera.getViewMatrix();
