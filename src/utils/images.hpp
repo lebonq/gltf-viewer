@@ -18,7 +18,7 @@ void flipImageYAxis(
 }
 
 void renderToImage(size_t width, size_t height, size_t numComponents,
-    unsigned char *outPixels, std::function<void()> drawScene);
+    unsigned char *outPixels, std::function<void()> render, std::function<void()> computeShadows);
 // Setup GL state in order to render in texture, call drawScene() then get the
 // texture from the GPU and store it on outPixels[0 : width * height *
 // numComponent]. Then restore the previous GL state.

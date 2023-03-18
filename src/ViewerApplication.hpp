@@ -6,7 +6,7 @@
 #include "utils/filesystem.hpp"
 #include "utils/shaders.hpp"
 
-  static float lightTheta = 0.1f;
+  static float lightTheta = 0.8f;
   static float lightPhi = 0.1f;
 
 class ViewerApplication
@@ -35,27 +35,8 @@ private:
   const fs::path m_ShadersRootPath;
 
   fs::path m_gltfFilePath;
-  std::string m_vertexShader = "shadowMapShader.vs.glsl";
-  std::string m_fragmentShader = "debug.fs.glsl";
 
-  GLint m_uViewMatrixLocation;
-  GLint m_uProjectionMatrixLocation;
-  GLint m_uModelMatrixLocation;
-  GLint m_ulightDirection;
-  GLint m_ulightIntensity;
-  GLint m_uBaseColorTexture;
-  GLint m_uBaseColorFactor;
-  GLint m_uMetallicRoughnessTexture;
-  GLint m_uMetallicFactor;
-  GLint m_uRoughnessFactor;
-  GLint m_uEmissiveTexture;
-  GLint m_uEmissiveFactor;
-  GLint m_uOcclusionTexture;
-  GLint m_uOcclusionStrength;
-  GLint m_uApplyOcclusion;
-  GLint m_uLightSpaceMatrix;
-
-  const GLuint SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
+  const GLuint SHADOW_WIDTH = 4096*2, SHADOW_HEIGHT = 4096*2;
   GLuint m_depthMapFBO;
   GLuint m_depthMap;
 
@@ -73,7 +54,10 @@ private:
       "glTF Viewer",
       m_OutputPath.empty()}; // show the window only if m_OutputPath is empty
 
-  GLProgram m_glslProgram;
+  GLProgram m_glslProgram_depth;
+  GLProgram m_glslProgram_render;
+
+  glm::mat4 m_lightSpaceMatrix;
 
   bool loadGltfFile(tinygltf::Model & model);
   std::vector<GLuint> createTextureObjects(const tinygltf::Model &model) const;
@@ -81,7 +65,6 @@ private:
   std::vector<GLuint> createVertexArrayObjects(const tinygltf::Model &model,
   const std::vector<GLuint> &bufferObjects,
   std::vector<VaoRange> &meshIndexToVaoRange);
-  void loadShaderPrograms();
   /*
     ! THE ORDER OF DECLARATION OF MEMBER VARIABLES IS IMPORTANT !
     - m_ImGuiIniFilename.c_str() will be used by ImGUI in ImGui::Shutdown, which

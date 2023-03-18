@@ -31,7 +31,6 @@ uniform sampler2D uMetallicRoughnessTexture;
 uniform sampler2D uEmissiveTexture;
 uniform sampler2D uOcclusionTexture;
 
-uniform mat4 uLightSpaceMatrix;
 uniform sampler2D uDirLightShadowMap;
 
 uniform int uApplyOcclusion;
@@ -120,15 +119,33 @@ void main()
   vec3 emissive = SRGBtoLINEAR(texture2D(uEmissiveTexture, vTexCoords)).rgb *
                   uEmissiveFactor;
 
-  vec3 color = (f_diffuse + f_specular) * uLightIntensity * NdotL;
+  float shadow = 0.0f;
+  vec3 lightCoords = vFragPosLightSpace.xyz / vFragPosLightSpace.w;
+  if(lightCoords.z <= 1.0f){
+    lightCoords = (lightCoords + 1.0f) / 2.0f;
+
+    float bias = 0.005f;
+    float currentDepth = lightCoords.z;
+
+    // Smoothens out the shadows
+    int sampleRadius = 2;
+    vec2 pixelSize = 1.0 / textureSize(uDirLightShadowMap, 0);
+    for(int y = -sampleRadius; y <= sampleRadius; y++)
+    {
+      for(int x = -sampleRadius; x <= sampleRadius; x++)
+      {
+        float closestDepth = texture(uDirLightShadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
+        if (currentDepth > closestDepth + bias)
+        shadow += 0.91f;
+      }
+    }
+    // Get average shadow
+    shadow /= pow((sampleRadius * 2 + 1), 2);
+  }
+
+  vec3 color = (f_diffuse *(1.0f-shadow) + f_specular *(1.0f-shadow)) * uLightIntensity * NdotL;
+  color *= (1.0f-shadow);
   color += emissive;
-
-  vec4 positionInDirLightScreen = uLightSpaceMatrix * vFragPosLightSpace; // Compute fragment position in NDC space of light
-  vec3 positionInDirLightNDC = vec3(positionInDirLightScreen / positionInDirLightScreen.w) * 0.5 + 0.5; // Homogeneize + put between 0 and 1
-  float depthBlockerInDirSpace = texture(uDirLightShadowMap, positionInDirLightNDC.xy).r;
-  float dirLightVisibility = positionInDirLightNDC.z < depthBlockerInDirSpace + 0.01 ? 1.0 : 0.0; //0.5 is shadow bias
-
-  color = vec3(depthBlockerInDirSpace,depthBlockerInDirSpace,depthBlockerInDirSpace);
 
   if (1 == uApplyOcclusion) {
     float ao = texture2D(uOcclusionTexture, vTexCoords).r;

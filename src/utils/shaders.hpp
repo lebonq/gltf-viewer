@@ -131,9 +131,26 @@ class GLProgram
 {
   GLuint m_GLId;
   typedef std::unique_ptr<char[]> CharBuffer;
-
 public:
-  GLProgram() : m_GLId(glCreateProgram()) {}
+  GLint m_uViewMatrixLocation;
+  GLint m_uProjectionMatrixLocation;
+  GLint m_uModelMatrixLocation;
+  GLint m_ulightDirection;
+  GLint m_ulightIntensity;
+  GLint m_uBaseColorTexture;
+  GLint m_uBaseColorFactor;
+  GLint m_uMetallicRoughnessTexture;
+  GLint m_uMetallicFactor;
+  GLint m_uRoughnessFactor;
+  GLint m_uEmissiveTexture;
+  GLint m_uEmissiveFactor;
+  GLint m_uOcclusionTexture;
+  GLint m_uOcclusionStrength;
+  GLint m_uApplyOcclusion;
+  GLint m_uLightSpaceMatrix;
+  GLint m_uDirLightShadowMap;
+
+  GLProgram() : m_GLId(glCreateProgram()) { }
 
   ~GLProgram() { glDeleteProgram(m_GLId); }
 
@@ -190,6 +207,29 @@ public:
     return location;
   }
 
+  void setUniform()
+  {
+    m_uViewMatrixLocation = getUniformLocation("uViewMatrix");
+    m_uProjectionMatrixLocation =
+        getUniformLocation("uProjectionMatrix");
+    m_uModelMatrixLocation = getUniformLocation("uModelMatrix");
+    m_ulightDirection = getUniformLocation("uLightDirection");
+    m_ulightIntensity = getUniformLocation("uLightIntensity");
+    m_uBaseColorTexture = getUniformLocation("uBaseColorTexture");
+    m_uBaseColorFactor = getUniformLocation("uBaseColorFactor");
+    m_uMetallicRoughnessTexture =
+        getUniformLocation("uMetallicRoughnessTexture");
+    m_uMetallicFactor = getUniformLocation("uMetallicFactor");
+    m_uRoughnessFactor = getUniformLocation("uRoughnessFactor");
+    m_uEmissiveTexture = getUniformLocation("uEmissiveTexture");
+    m_uEmissiveFactor = getUniformLocation("uEmissiveFactor");
+    m_uOcclusionTexture = getUniformLocation("uOcclusionTexture");
+    m_uOcclusionStrength = getUniformLocation("uOcclusionStrength");
+    m_uApplyOcclusion = getUniformLocation("uApplyOcclusion");
+    m_uLightSpaceMatrix = getUniformLocation("uLightSpaceMatrix");
+    m_uDirLightShadowMap = getUniformLocation("uDirLightShadowMap");
+  }
+
   GLint getAttribLocation(const GLchar *name) const
   {
     GLint location = glGetAttribLocation(m_GLId, name);
@@ -200,6 +240,7 @@ public:
   {
     glBindAttribLocation(m_GLId, index, name);
   }
+
 };
 
 inline GLProgram buildProgram(std::initializer_list<GLShader> shaders)
@@ -255,5 +296,6 @@ inline GLProgram compileProgram(std::vector<fs::path> shaderPaths)
     std::cerr << "Program link error:" << program.getInfoLog() << std::endl;
     throw std::runtime_error("Program link error:" + program.getInfoLog());
   }
+
   return program;
 }

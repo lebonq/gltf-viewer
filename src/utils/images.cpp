@@ -5,8 +5,12 @@
 #include <iostream>
 
 void renderToImage(size_t width, size_t height, size_t numComponents,
-    unsigned char *outPixels, std::function<void()> drawScene)
+    unsigned char *outPixels, std::function<void()> render, std::function<void()> computeShadows)
 {
+  computeShadows(); //we move render shadows to a separate function
+        // because we need to call it before render
+        // and don't alter the state of framebuffer and texture
+
   GLint previousTextureObject = 0;
   GLint previousFramebufferObject = 0;
 
@@ -55,7 +59,7 @@ void renderToImage(size_t width, size_t height, size_t numComponents,
   const auto framebufferStatus = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
   assert(framebufferStatus == GL_FRAMEBUFFER_COMPLETE);
 
-  drawScene();
+  render();
 
   GLint currentlyBoundFBO = 0;
   glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &currentlyBoundFBO);
