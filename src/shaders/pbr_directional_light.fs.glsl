@@ -136,7 +136,7 @@ void main()
       {
         float closestDepth = texture(uDirLightShadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
         if (currentDepth > closestDepth + bias)
-        shadow += 0.91f;
+        shadow += 0.79f; //We dont put 1 to avoid the shadow to be too dark
       }
     }
     // Get average shadow
