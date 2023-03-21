@@ -23,14 +23,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Working Shadow Map">
-      <change afterPath="$PROJECT_DIR$/src/shaders/pbr_directional_light_shadows.fs.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ViewerApplication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ViewerApplication.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shaders/pbr_directional_light.fs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/pbr_directional_light.fs.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shaders/shadowMapShader.fs.glsl" beforeDir="false" />
-    </list>
+    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Fine tune shadow mapping" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -177,7 +170,7 @@
       <workItem from="1679263035794" duration="780000" />
       <workItem from="1679345522178" duration="186000" />
       <workItem from="1679391159930" duration="9064000" />
-      <workItem from="1679434074582" duration="2262000" />
+      <workItem from="1679434074582" duration="2572000" />
     </task>
     <task id="LOCAL-00001" summary="Add loadGltf and createBufferObjects">
       <created>1673517456196</created>
@@ -263,7 +256,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679159528562</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Fine tune shadow mapping">
+      <created>1679436613670</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1679436613670</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -291,6 +291,7 @@
     <MESSAGE value="First try of shadow mapping" />
     <MESSAGE value="Some bug fix" />
     <MESSAGE value="Working Shadow Map" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working Shadow Map" />
+    <MESSAGE value="Fine tune shadow mapping" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fine tune shadow mapping" />
   </component>
 </project>
