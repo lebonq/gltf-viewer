@@ -27,14 +27,32 @@ void keyCallback(
 int ViewerApplication::run()
 {
   // Loader shaders
-  m_glslProgram_depth =
+  m_glslProgram_shadowMap =
       compileProgram({m_ShadersRootPath / "simpleDepthShader.vs.glsl",
           m_ShadersRootPath / "simpleDepthShader.fs.glsl"});
-  m_glslProgram_depth.setUniform();
-  m_glslProgram_render =
+  m_glslProgram_shadowMap.setUniform();
+  m_glslProgram_fullRender =
+      compileProgram({m_ShadersRootPath / "shadowMapShader.vs.glsl",
+          m_ShadersRootPath / "pbr_directional_light_shadows.fs.glsl"});
+  m_glslProgram_fullRender.setUniform();
+
+  m_glslProgram_normalRender =
+      compileProgram({m_ShadersRootPath / "forward.vs.glsl",
+          m_ShadersRootPath / "normals.fs.glsl"});
+  m_glslProgram_normalRender.setUniform();
+
+  m_glslProgram_noShadow =
       compileProgram({m_ShadersRootPath / "shadowMapShader.vs.glsl",
           m_ShadersRootPath / "pbr_directional_light.fs.glsl"});
-  m_glslProgram_render.setUniform();
+  m_glslProgram_noShadow.setUniform();
+
+  m_glslProgram_debugShadowMap =
+      compileProgram({m_ShadersRootPath / "shadowMapShader.vs.glsl",
+          m_ShadersRootPath / "debug.fs.glsl"});
+  m_glslProgram_debugShadowMap.setUniform();
+
+  m_glslProgram_shadowMapRendered = &m_glslProgram_shadowMap;
+  m_glslProgram_rendered = &m_glslProgram_fullRender;
 
   glm::vec3 lightDir = glm::vec3(1.0f, 1.0f, 1.0f);
   {
@@ -47,6 +65,7 @@ int ViewerApplication::run()
   glm::vec3 lightInt = glm::vec3(1.0f, 1.0f, 1.0f);
   bool lightFromCamera = false;
   bool applyOcclusion = true;
+  bool renderShadow = true;
   bool shadowNeedUpdate = true;
 
   // Build projection matrix
@@ -114,19 +133,19 @@ int ViewerApplication::run()
 
   // Lambda function to bind material
   const auto bindMaterial = [&](const auto materialIndex,
-                                const GLProgram &shader) {
+                                const GLProgram* shader) {
     if (materialIndex >= 0) {
       const auto &material = model.materials[materialIndex];
       const auto &pbrMetallicRoughness = material.pbrMetallicRoughness;
-      if (shader.m_uBaseColorFactor >= 0) {
-        glUniform4f(shader.m_uBaseColorFactor,
+      if (shader->m_uBaseColorFactor >= 0) {
+        glUniform4f(shader->m_uBaseColorFactor,
             (float)pbrMetallicRoughness.baseColorFactor[0],
             (float)pbrMetallicRoughness.baseColorFactor[1],
             (float)pbrMetallicRoughness.baseColorFactor[2],
             (float)pbrMetallicRoughness.baseColorFactor[3]);
       }
 
-      if (shader.m_uBaseColorTexture >= 0) {
+      if (shader->m_uBaseColorTexture >= 0) {
         auto textureObject = whiteTexture;
         if (pbrMetallicRoughness.baseColorTexture.index >= 0) {
           const auto &texture =
@@ -138,17 +157,17 @@ int ViewerApplication::run()
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textureObject);
-        glUniform1i(shader.m_uBaseColorTexture, 0);
+        glUniform1i(shader->m_uBaseColorTexture, 0);
       }
-      if (shader.m_uMetallicFactor >= 0) {
-        glUniform1f(shader.m_uMetallicFactor,
+      if (shader->m_uMetallicFactor >= 0) {
+        glUniform1f(shader->m_uMetallicFactor,
             (float)pbrMetallicRoughness.metallicFactor);
       }
-      if (shader.m_uRoughnessFactor >= 0) {
-        glUniform1f(shader.m_uRoughnessFactor,
+      if (shader->m_uRoughnessFactor >= 0) {
+        glUniform1f(shader->m_uRoughnessFactor,
             (float)pbrMetallicRoughness.roughnessFactor);
       }
-      if (shader.m_uMetallicRoughnessTexture >= 0) {
+      if (shader->m_uMetallicRoughnessTexture >= 0) {
         auto textureObject = 0u;
         if (pbrMetallicRoughness.metallicRoughnessTexture.index >= 0) {
           const auto &texture =
@@ -161,14 +180,14 @@ int ViewerApplication::run()
 
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, textureObject);
-        glUniform1i(shader.m_uMetallicRoughnessTexture, 1);
+        glUniform1i(shader->m_uMetallicRoughnessTexture, 1);
       }
-      if (shader.m_uEmissiveFactor >= 0) {
-        glUniform3f(shader.m_uEmissiveFactor, (float)material.emissiveFactor[0],
+      if (shader->m_uEmissiveFactor >= 0) {
+        glUniform3f(shader->m_uEmissiveFactor, (float)material.emissiveFactor[0],
             (float)material.emissiveFactor[1],
             (float)material.emissiveFactor[2]);
       }
-      if (shader.m_uEmissiveTexture >= 0) {
+      if (shader->m_uEmissiveTexture >= 0) {
         auto textureObject = 0u;
         if (material.emissiveTexture.index >= 0) {
           const auto &texture = model.textures[material.emissiveTexture.index];
@@ -179,13 +198,13 @@ int ViewerApplication::run()
 
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, textureObject);
-        glUniform1i(shader.m_uEmissiveTexture, 2);
+        glUniform1i(shader->m_uEmissiveTexture, 2);
       }
-      if (shader.m_uOcclusionStrength >= 0) {
-        glUniform1f(shader.m_uOcclusionStrength,
+      if (shader->m_uOcclusionStrength >= 0) {
+        glUniform1f(shader->m_uOcclusionStrength,
             (float)material.occlusionTexture.strength);
       }
-      if (shader.m_uOcclusionTexture >= 0) {
+      if (shader->m_uOcclusionTexture >= 0) {
         auto textureObject = whiteTexture;
         if (material.occlusionTexture.index >= 0) {
           const auto &texture = model.textures[material.occlusionTexture.index];
@@ -196,7 +215,7 @@ int ViewerApplication::run()
 
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, textureObject);
-        glUniform1i(shader.m_uOcclusionTexture, 3);
+        glUniform1i(shader->m_uOcclusionTexture, 3);
       }
 
     } else {
@@ -204,47 +223,47 @@ int ViewerApplication::run()
       // Defined here:
       // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#reference-material
       // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#reference-pbrmetallicroughness3
-      if (shader.m_uBaseColorFactor >= 0) {
-        glUniform4f(shader.m_uBaseColorFactor, 1, 1, 1, 1);
+      if (shader->m_uBaseColorFactor >= 0) {
+        glUniform4f(shader->m_uBaseColorFactor, 1, 1, 1, 1);
       }
 
-      if (shader.m_uBaseColorTexture >= 0) {
+      if (shader->m_uBaseColorTexture >= 0) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glUniform1i(shader.m_uBaseColorTexture, whiteTexture);
+        glUniform1i(shader->m_uBaseColorTexture, whiteTexture);
       }
-      if (shader.m_uMetallicFactor >= 0) {
-        glUniform1f(shader.m_uMetallicFactor, 1.f);
+      if (shader->m_uMetallicFactor >= 0) {
+        glUniform1f(shader->m_uMetallicFactor, 1.f);
       }
-      if (shader.m_uRoughnessFactor >= 0) {
-        glUniform1f(shader.m_uRoughnessFactor, 1.f);
+      if (shader->m_uRoughnessFactor >= 0) {
+        glUniform1f(shader->m_uRoughnessFactor, 1.f);
       }
-      if (shader.m_uMetallicRoughnessTexture >= 0) {
+      if (shader->m_uMetallicRoughnessTexture >= 0) {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glUniform1i(shader.m_uMetallicRoughnessTexture, 1);
+        glUniform1i(shader->m_uMetallicRoughnessTexture, 1);
       }
-      if (shader.m_uEmissiveFactor >= 0) {
-        glUniform3f(shader.m_uEmissiveFactor, 0.f, 0.f, 0.f);
+      if (shader->m_uEmissiveFactor >= 0) {
+        glUniform3f(shader->m_uEmissiveFactor, 0.f, 0.f, 0.f);
       }
-      if (shader.m_uEmissiveTexture >= 0) {
+      if (shader->m_uEmissiveTexture >= 0) {
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glUniform1i(shader.m_uEmissiveTexture, 2);
+        glUniform1i(shader->m_uEmissiveTexture, 2);
       }
-      if (shader.m_uOcclusionStrength >= 0) {
-        glUniform1f(shader.m_uOcclusionStrength, 0.f);
+      if (shader->m_uOcclusionStrength >= 0) {
+        glUniform1f(shader->m_uOcclusionStrength, 0.f);
       }
-      if (shader.m_uOcclusionTexture >= 0) {
+      if (shader->m_uOcclusionTexture >= 0) {
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glUniform1i(shader.m_uOcclusionTexture, 3);
+        glUniform1i(shader->m_uOcclusionTexture, 3);
       }
     }
   };
 
   // Lambda function to draw the scene
-  const auto drawScene = [&](glm::mat4 viewMatrix, const GLProgram &shader) {
+  const auto drawScene = [&](glm::mat4 viewMatrix, const GLProgram* shader) {
     // The recursive function that should draw a node
     // We use a std::function because a simple lambda cannot be recursive
     const std::function<void(int, const glm::mat4 &)> drawNode =
@@ -253,28 +272,28 @@ int ViewerApplication::run()
           glm::mat4 modelMatrix = getLocalToWorldMatrix(v_node, parentMatrix);
           if (v_node.mesh >= 0) {
             // send model matrix
-            if (shader.m_uModelMatrixLocation >= 0) {
-              glUniformMatrix4fv(shader.m_uModelMatrixLocation, 1, GL_FALSE,
+            if (shader->m_uModelMatrixLocation >= 0) {
+              glUniformMatrix4fv(shader->m_uModelMatrixLocation, 1, GL_FALSE,
                   glm::value_ptr(modelMatrix));
             }
 
-            if (shader.m_ulightDirection >= 0) {
+            if (shader->m_ulightDirection >= 0) {
               if (lightFromCamera) {
-                glUniform3f(shader.m_ulightDirection, 0, 0, 1);
+                glUniform3f(shader->m_ulightDirection, 0, 0, 1);
               } else {
                 const auto lightDirectionInViewSpace = glm::normalize(
                     glm::vec3(viewMatrix * glm::vec4(lightDir, 0.)));
-                glUniform3f(shader.m_ulightDirection,
+                glUniform3f(shader->m_ulightDirection,
                     lightDirectionInViewSpace[0], lightDirectionInViewSpace[1],
                     lightDirectionInViewSpace[2]);
               }
             }
-            if (shader.m_ulightIntensity >= 0) {
+            if (shader->m_ulightIntensity >= 0) {
               glUniform3fv(
-                  shader.m_ulightIntensity, 1, glm::value_ptr(lightInt));
+                  shader->m_ulightIntensity, 1, glm::value_ptr(lightInt));
             }
-            if (shader.m_uApplyOcclusion >= 0) {
-              glUniform1i(shader.m_uApplyOcclusion, applyOcclusion);
+            if (shader->m_uApplyOcclusion >= 0) {
+              glUniform1i(shader->m_uApplyOcclusion, applyOcclusion);
             }
 
             // get mesh an draw every primitives
@@ -319,56 +338,64 @@ int ViewerApplication::run()
     const auto sceneCenter = 0.5f * (m_bboxMin + m_bboxMax);
     const float sceneRadius = glm::length((m_bboxMax - m_bboxMin)) * 0.5f;
 
-    const auto dirLightUpVector =
-        computeDirectionVectorUp(lightPhi, lightTheta);
-    const auto dirLightViewMatrix =
-        glm::lookAt(sceneCenter + lightDir * sceneRadius, sceneCenter,
-            dirLightUpVector); // Will not work if m_DirLightDirection is
-                               // colinear to lightUpVector
+    glm::mat4 dirLightViewMatrix = glm::mat4(0);
+
+    if(lightFromCamera){ // compute the shadow from the camera
+      const auto cam = cameraController->getCamera();
+      dirLightViewMatrix = glm::lookAt(cam.eye(),cam.center(),cam.up());
+    }else //Compute the shadow as a distant light
+      {
+        const auto dirLightUpVector =
+            computeDirectionVectorUp(lightPhi, lightTheta);
+
+        dirLightViewMatrix = glm::lookAt(sceneCenter + lightDir * sceneRadius, sceneCenter,
+                dirLightUpVector); // Will not work if m_DirLightDirection is
+                                   // colinear to lightUpVector
+    }
     const auto dirLightProjMatrix = glm::ortho(-sceneRadius, sceneRadius,
-        -sceneRadius, sceneRadius, 0.01f * sceneRadius, 2.f * sceneRadius);
+        -sceneRadius, sceneRadius, 0.1f * sceneRadius, 2.f * sceneRadius);
     m_lightSpaceMatrix = dirLightProjMatrix * dirLightViewMatrix;
 
-    m_glslProgram_depth.use();
-    glUniformMatrix4fv(m_glslProgram_depth.m_uLightSpaceMatrix, 1, GL_FALSE,
+    m_glslProgram_shadowMapRendered->use();
+    glUniformMatrix4fv(m_glslProgram_shadowMapRendered->m_uLightSpaceMatrix, 1, GL_FALSE,
         glm::value_ptr(m_lightSpaceMatrix));
 
     glEnable(GL_DEPTH_TEST);
-    glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+    glViewport(0, 0, SHADOW_RES, SHADOW_RES);
     glBindFramebuffer(GL_FRAMEBUFFER, m_depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
-    drawScene(dirLightViewMatrix, m_glslProgram_depth);
+    drawScene(dirLightViewMatrix, m_glslProgram_shadowMapRendered);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   };
 
   const auto render = [&]() {
     const auto camera = cameraController->getCamera();
 
-    m_glslProgram_render.use();
+    m_glslProgram_rendered->use();
     const auto viewMatrix = camera.getViewMatrix();
-    if (m_glslProgram_render.m_uViewMatrixLocation >= 0) {
-      glUniformMatrix4fv(m_glslProgram_render.m_uViewMatrixLocation, 1,
+    if (m_glslProgram_rendered->m_uViewMatrixLocation >= 0) {
+      glUniformMatrix4fv(m_glslProgram_rendered->m_uViewMatrixLocation, 1,
           GL_FALSE, glm::value_ptr(viewMatrix));
     }
-    if (m_glslProgram_render.m_uProjectionMatrixLocation >= 0) {
-      glUniformMatrix4fv(m_glslProgram_render.m_uProjectionMatrixLocation, 1,
+    if (m_glslProgram_rendered->m_uProjectionMatrixLocation >= 0) {
+      glUniformMatrix4fv(m_glslProgram_rendered->m_uProjectionMatrixLocation, 1,
           GL_FALSE, glm::value_ptr(projMatrix));
     }
-    glUniformMatrix4fv(m_glslProgram_render.m_uLightSpaceMatrix, 1, GL_FALSE,
+    glUniformMatrix4fv(m_glslProgram_rendered->m_uLightSpaceMatrix, 1, GL_FALSE,
         glm::value_ptr(m_lightSpaceMatrix));
 
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, m_depthMap);
-    glUniform1i(m_glslProgram_render.m_uDirLightShadowMap, 4);
+    glUniform1i(m_glslProgram_rendered->m_uDirLightShadowMap, 4);
 
     glViewport(0, 0, m_nWindowWidth, m_nWindowHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    drawScene(viewMatrix, m_glslProgram_render);
+    drawScene(viewMatrix, m_glslProgram_rendered);
   };
 
   if (!m_OutputPath.empty()) {
     std::vector<unsigned char> pixels(m_nWindowWidth * m_nWindowHeight * 3);
-    m_glslProgram_render.use();
+
     renderToImage(m_nWindowWidth, m_nWindowHeight, 3, pixels.data(), [&]() {
       render();
     },[&]() {
@@ -387,10 +414,12 @@ int ViewerApplication::run()
     const auto seconds = glfwGetTime();
     const auto camera = cameraController->getCamera();
 
-    if(shadowNeedUpdate) {
+    if((shadowNeedUpdate || lightFromCamera) && renderShadow) {
       computeShadowMap();
       shadowNeedUpdate = false;
     }
+
+    if(lightFromCamera) shadowNeedUpdate = true;
     render();
 
     // GUI code:
@@ -461,15 +490,39 @@ int ViewerApplication::run()
       }
       ImGui::Checkbox("light from camera", &lightFromCamera);
       ImGui::Checkbox("apply occlusion", &applyOcclusion);
+      if (ImGui::CollapsingHeader("Shadow Option")) {
+        if(ImGui::SliderInt("Shadow Resolution", &SHADOW_RES, 128, 4096*3)){
+          glDeleteFramebuffers(1,&m_depthMapFBO);
+          glDeleteTextures(1,&m_depthMap);
+          createShdowmap();
+          shadowNeedUpdate = true; //If shadow res changed, shadow map need update
+        }
+      }
+      if (ImGui::CollapsingHeader("Render Type")) {
+        static int renderType = 0;
+        auto renderTypeChanged =
+            ImGui::RadioButton("Full Render", &renderType, 0) ||
+            ImGui::RadioButton("Normal render", &renderType, 1) ||
+            ImGui::RadioButton("No shadow", &renderType, 2)||
+            ImGui::RadioButton("Shadow Map Render", &renderType, 3);
+        if (renderTypeChanged) {
+          if (renderType == 0) {
+            m_glslProgram_rendered = &m_glslProgram_fullRender;
+            renderShadow = true;
 
-      static int renderType = 0;
-      auto renderTypeChanged =
-          ImGui::RadioButton("Full Render", &renderType, 0) ||
-          ImGui::RadioButton("Normal render", &renderType, 1);
-      if (renderTypeChanged) {
-        if (renderType == 0) {
+          } else if (renderType == 1) {
+            m_glslProgram_rendered = &m_glslProgram_normalRender;
+            renderShadow = false;
 
-        } else {
+          } else if (renderType == 2) {
+            m_glslProgram_rendered = &m_glslProgram_noShadow;
+            renderShadow = false;
+
+          }
+          else if (renderType == 3) {
+            m_glslProgram_rendered = &m_glslProgram_debugShadowMap;
+            renderShadow = true;
+          }
         }
       }
 
@@ -490,7 +543,11 @@ int ViewerApplication::run()
     m_GLFWHandle.swapBuffers(); // Swap front and back buffers
   }
 
-  // TODO clean up allocated GL data
+  glDeleteVertexArrays(vertexArrayObjects.size(), vertexArrayObjects.data());
+  glDeleteBuffers(v_bufferObjects.size(), v_bufferObjects.data());
+  glDeleteTextures(textureObjects.size(), textureObjects.data());
+  glDeleteFramebuffers(1, &m_depthMapFBO);
+  glDeleteTextures(1, &m_depthMap);
 
   return 0;
 }
@@ -753,8 +810,8 @@ void ViewerApplication::createShdowmap()
   // create depth texture
   glGenTextures(1, &m_depthMap);
   glBindTexture(GL_TEXTURE_2D, m_depthMap);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH,
-      SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_RES,
+      SHADOW_RES, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);

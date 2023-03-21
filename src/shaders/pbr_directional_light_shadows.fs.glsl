@@ -8,6 +8,8 @@
 in vec3 vViewSpacePosition;
 in vec3 vViewSpaceNormal;
 in vec2 vTexCoords;
+in vec4 vFragPosLightSpace;
+in vec3 vFragPos;
 
 // Here we use vTexCoords but we should use vTexCoords1 or vTexCoords2 depending
 // on the material because glTF can handle two texture coordinates sets per
@@ -28,6 +30,8 @@ uniform sampler2D uBaseColorTexture;
 uniform sampler2D uMetallicRoughnessTexture;
 uniform sampler2D uEmissiveTexture;
 uniform sampler2D uOcclusionTexture;
+
+uniform sampler2D uDirLightShadowMap;
 
 uniform int uApplyOcclusion;
 
@@ -115,7 +119,32 @@ void main()
   vec3 emissive = SRGBtoLINEAR(texture2D(uEmissiveTexture, vTexCoords)).rgb *
                   uEmissiveFactor;
 
-  vec3 color = (f_diffuse  + f_specular ) * uLightIntensity * NdotL;
+  float shadow = 0.0f;
+  vec3 lightCoords = vFragPosLightSpace.xyz / vFragPosLightSpace.w;
+  if(lightCoords.z <= 1.0f){
+    lightCoords = (lightCoords + 1.0f) / 2.0f;
+
+    float bias = 0.005f;
+    float currentDepth = lightCoords.z;
+
+    // Smoothens out the shadows
+    int radius = 2;
+    vec2 pixelSize = 1.0 / textureSize(uDirLightShadowMap, 0);
+    for(int y = -radius; y <= radius; y++)
+    {
+      for(int x = -radius; x <= radius; x++)
+      {
+        float closestDepth = texture(uDirLightShadowMap, lightCoords.xy + vec2(x, y) * pixelSize).r;
+        if (currentDepth > closestDepth + bias)
+        shadow += 0.91f;
+      }
+    }
+    // Get average shadow
+    shadow /= pow((radius * 2 + 1), 2);
+  }
+
+  vec3 color = (f_diffuse *(1.0f-shadow) + f_specular *(1.0f-shadow)) * uLightIntensity * NdotL;
+  color *= (1.0f-shadow);
   color += emissive;
 
   if (1 == uApplyOcclusion) {

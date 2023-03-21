@@ -30,13 +30,15 @@ private:
   GLsizei m_nWindowWidth = 1280;
   GLsizei m_nWindowHeight = 720;
 
+  float m_fov = 70.f;
+
   const fs::path m_AppPath;
   const std::string m_AppName;
   const fs::path m_ShadersRootPath;
 
   fs::path m_gltfFilePath;
 
-  const GLuint SHADOW_WIDTH = 4096*2, SHADOW_HEIGHT = 4096*2;
+  GLint SHADOW_RES = 4096;
   GLuint m_depthMapFBO;
   GLuint m_depthMap;
 
@@ -54,8 +56,13 @@ private:
       "glTF Viewer",
       m_OutputPath.empty()}; // show the window only if m_OutputPath is empty
 
-  GLProgram m_glslProgram_depth;
-  GLProgram m_glslProgram_render;
+  GLProgram* m_glslProgram_shadowMapRendered;
+  GLProgram* m_glslProgram_rendered;
+  GLProgram m_glslProgram_shadowMap;
+  GLProgram m_glslProgram_fullRender;
+  GLProgram m_glslProgram_normalRender;
+  GLProgram m_glslProgram_noShadow;
+  GLProgram m_glslProgram_debugShadowMap;
 
   glm::mat4 m_lightSpaceMatrix;
 
