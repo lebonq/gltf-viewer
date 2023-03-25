@@ -12,7 +12,7 @@
 class ViewerApplication
 {
 public:
-  ViewerApplication(const fs::path &appPath, uint32_t width, uint32_t height,
+  ViewerApplication(fs::path appPath, uint32_t width, uint32_t height,
       const fs::path &gltfFile, const std::vector<float> &lookatArgs,
       const std::string &vertexShader, const std::string &fragmentShader,
       const fs::path &output);
@@ -67,7 +67,7 @@ private:
   glm::mat4 m_lightSpaceMatrix;
 
   bool loadGltfFile(tinygltf::Model & model);
-  std::vector<GLuint> createTextureObjects(const tinygltf::Model &model) const;
+  std::vector<GLuint> createTextureObjects(const tinygltf::Model &model);
   std::vector<GLuint> createBufferObjects(const tinygltf::Model &model);
   std::vector<GLuint> createVertexArrayObjects(const tinygltf::Model &model,
   const std::vector<GLuint> &bufferObjects,
@@ -83,7 +83,7 @@ private:
     the creation of a GLFW windows and thus a GL context which must exists
     before most of OpenGL function calls.
   */
-  void createShdowmap();
+  void createShadowMap();
 };
 
 static const auto computeDirectionVectorUp = [](float phiRadians, float thetaRadians)

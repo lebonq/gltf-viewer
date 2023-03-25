@@ -1,12 +1,10 @@
 #include "ViewerApplication.hpp"
 
 #include <iostream>
-#include <numeric>
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/io.hpp>
+#include <utility>
 
 #include "Data.hpp"
 #include "utils/cameras.hpp"
@@ -82,7 +80,7 @@ int ViewerApplication::run()
   auto maxDistance = glm::length(diag);
 
   const auto projMatrix =
-      glm::perspective(70.f, float(m_nWindowWidth) / m_nWindowHeight,
+      glm::perspective(70.f, float(m_nWindowWidth) / float(m_nWindowHeight),
           0.001f * maxDistance, 1.5f * maxDistance);
 
   std::unique_ptr<CameraController> cameraController =
@@ -116,7 +114,7 @@ int ViewerApplication::run()
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
   glBindTexture(GL_TEXTURE_2D, 0);
 
-  createShdowmap();
+  createShadowMap();
 
   std::cerr << "Create Buffer Objects" << std::endl;
   auto v_bufferObjects = createBufferObjects(model);
@@ -230,7 +228,7 @@ int ViewerApplication::run()
       if (shader->m_uBaseColorTexture >= 0) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glUniform1i(shader->m_uBaseColorTexture, whiteTexture);
+        glUniform1i(shader->m_uBaseColorTexture, (GLint)whiteTexture);
       }
       if (shader->m_uMetallicFactor >= 0) {
         glUniform1f(shader->m_uMetallicFactor, 1.f);
@@ -494,7 +492,7 @@ int ViewerApplication::run()
         if(ImGui::SliderInt("Shadow Resolution", &SHADOW_RES, 128, 4096*3)){
           glDeleteFramebuffers(1,&m_depthMapFBO);
           glDeleteTextures(1,&m_depthMap);
-          createShdowmap();
+          createShadowMap();
           shadowNeedUpdate = true; //If shadow res changed, shadow map need update
         }
       }
@@ -543,22 +541,22 @@ int ViewerApplication::run()
     m_GLFWHandle.swapBuffers(); // Swap front and back buffers
   }
 
-  glDeleteVertexArrays(vertexArrayObjects.size(), vertexArrayObjects.data());
-  glDeleteBuffers(v_bufferObjects.size(), v_bufferObjects.data());
-  glDeleteTextures(textureObjects.size(), textureObjects.data());
+  glDeleteVertexArrays((GLsizei)vertexArrayObjects.size(), vertexArrayObjects.data());
+  glDeleteBuffers((GLsizei)v_bufferObjects.size(), v_bufferObjects.data());
+  glDeleteTextures((GLsizei)textureObjects.size(), textureObjects.data());
   glDeleteFramebuffers(1, &m_depthMapFBO);
   glDeleteTextures(1, &m_depthMap);
 
   return 0;
 }
 
-ViewerApplication::ViewerApplication(const fs::path &appPath, uint32_t width,
+ViewerApplication::ViewerApplication(fs::path appPath, uint32_t width,
     uint32_t height, const fs::path &gltfFile,
     const std::vector<float> &lookatArgs, const std::string &vertexShader,
     const std::string &fragmentShader, const fs::path &output) :
-    m_nWindowWidth(width),
-    m_nWindowHeight(height),
-    m_AppPath{appPath},
+    m_nWindowWidth((GLsizei)width),
+    m_nWindowHeight((GLsizei)height),
+    m_AppPath{std::move(appPath)},
     m_AppName{m_AppPath.stem().string()},
     m_ImGuiIniFilename{m_AppName + ".imgui.ini"},
     m_ShadersRootPath{m_AppPath.parent_path() / "shaders"},
@@ -602,7 +600,7 @@ bool ViewerApplication::loadGltfFile(tinygltf::Model &model)
 }
 
 std::vector<GLuint> ViewerApplication::createTextureObjects(
-    const tinygltf::Model &model) const
+    const tinygltf::Model &model)
 {
   std::vector<GLuint> textureObjects(model.textures.size(), 0);
 
@@ -661,7 +659,7 @@ std::vector<GLuint> ViewerApplication::createBufferObjects(
   for (size_t i = 0; i < model.buffers.size(); ++i) {
     const auto &buffer = model.buffers[i].data;
     glBindBuffer(GL_ARRAY_BUFFER, bufferObjects[i]);
-    glBufferStorage(GL_ARRAY_BUFFER, buffer.size(), buffer.data(), 0);
+    glBufferStorage(GL_ARRAY_BUFFER,(GLsizei) buffer.size(), buffer.data(), 0);
   }
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -804,14 +802,14 @@ std::vector<GLuint> ViewerApplication::createVertexArrayObjects(
   return vertexArrayObjects;
 }
 
-void ViewerApplication::createShdowmap()
+void ViewerApplication::createShadowMap()
 {
   glGenFramebuffers(1, &m_depthMapFBO);
   // create depth texture
   glGenTextures(1, &m_depthMap);
   glBindTexture(GL_TEXTURE_2D, m_depthMap);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_RES,
-      SHADOW_RES, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+      SHADOW_RES, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
