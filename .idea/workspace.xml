@@ -23,10 +23,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Fine tune shadow mapping">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_17_03_23_08_57_[Changes]1/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Fine tune shadow mapping" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -106,6 +103,11 @@
       </method>
     </configuration>
     <configuration name="View Sponza" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/Sponza/glTF/Sponza.gltf --lookat 0.926627,4.73407,0.16938,-0.0712768,4.70099,0.113776,-0.0330304,0.999454,-0.00183996" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
