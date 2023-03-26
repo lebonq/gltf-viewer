@@ -149,6 +149,8 @@ public:
   GLint m_uApplyOcclusion;
   GLint m_uLightSpaceMatrix;
   GLint m_uDirLightShadowMap;
+  GLint m_uNormalTexture;
+  GLint m_uNormalScale;
 
   GLProgram() : m_GLId(glCreateProgram()) { }
 
@@ -228,6 +230,8 @@ public:
     m_uApplyOcclusion = getUniformLocation("uApplyOcclusion");
     m_uLightSpaceMatrix = getUniformLocation("uLightSpaceMatrix");
     m_uDirLightShadowMap = getUniformLocation("uDirLightShadowMap");
+    m_uNormalTexture = getUniformLocation("uNormalTexture");
+    m_uNormalScale = getUniformLocation("uNormalScale");
   }
 
   GLint getAttribLocation(const GLchar *name) const

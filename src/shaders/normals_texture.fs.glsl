@@ -13,13 +13,11 @@ uniform sampler2D uNormalTexture;
 
 uniform float uNormalScale;
 
-in vec3 vBitengants;
-
 out vec3 fColor;
 
 void main()
 {
    // Need another normalization because interpolation of vertex attributes does not maintain unit length
-   vec3 viewSpaceNormal = normalize(vViewSpaceNormal);
-   fColor = viewSpaceNormal;
+   vec3 tex = texture(uNormalTexture, vTexCoords).rgb;
+   fColor = tex;
 }

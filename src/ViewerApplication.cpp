@@ -152,7 +152,7 @@ int ViewerApplication::run()
           const auto &texture =
               model.textures[pbrMetallicRoughness.baseColorTexture.index];
           if (texture.source >= 0) {
-            textureObject = textureObjects[texture.source];
+            textureObject = textureObjects[pbrMetallicRoughness.baseColorTexture.index];
           }
         }
 
@@ -175,7 +175,8 @@ int ViewerApplication::run()
               model.textures[pbrMetallicRoughness.metallicRoughnessTexture
                                  .index];
           if (texture.source >= 0) {
-            textureObject = textureObjects[texture.source];
+            textureObject = textureObjects[pbrMetallicRoughness.metallicRoughnessTexture
+                                               .index];
           }
         }
 
@@ -193,7 +194,7 @@ int ViewerApplication::run()
         if (material.emissiveTexture.index >= 0) {
           const auto &texture = model.textures[material.emissiveTexture.index];
           if (texture.source >= 0) {
-            textureObject = textureObjects[texture.source];
+            textureObject = textureObjects[material.emissiveTexture.index];
           }
         }
 
@@ -210,13 +211,28 @@ int ViewerApplication::run()
         if (material.occlusionTexture.index >= 0) {
           const auto &texture = model.textures[material.occlusionTexture.index];
           if (texture.source >= 0) {
-            textureObject = textureObjects[texture.source];
+            textureObject = textureObjects[material.occlusionTexture.index];
           }
         }
 
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, textureObject);
         glUniform1i(shader->m_uOcclusionTexture, 3);
+      }
+      if (shader->m_uNormalTexture >= 0) {
+        auto textureObject = whiteTexture;
+        if (material.normalTexture.index >= 0) {
+          const auto &texture = model.textures[material.normalTexture.index];
+          if (texture.source >= 0) {
+            textureObject = textureObjects[material.normalTexture.index];
+          }
+        }
+
+        glActiveTexture(GL_TEXTURE5);//4 is for shadow map
+        glBindTexture(GL_TEXTURE_2D, textureObject);
+        glUniform1i(shader->m_uNormalTexture, 5);
+        glUniform1f(shader->m_uNormalScale,
+            (float)material.normalTexture.scale);
       }
 
     } else {
@@ -259,6 +275,13 @@ int ViewerApplication::run()
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, 0);
         glUniform1i(shader->m_uOcclusionTexture, 3);
+      }
+      if (shader->m_uNormalTexture >= 0) {
+        glActiveTexture(GL_TEXTURE5);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glUniform1i(shader->m_uNormalTexture, 5);
+        glUniform1f(shader->m_uNormalScale,
+            1.0f);
       }
     }
   };
@@ -782,6 +805,34 @@ std::vector<GLuint> ViewerApplication::createVertexArrayObjects(
           ; // Compute the total byte offset using the accessor and the buffer
             // view
           glVertexAttribPointer(VERTEX_ATTRIB_TEXCOORD0_IDX, accessor.type,
+              accessor.componentType, GL_FALSE, GLsizei(bufferView.byteStride),
+              (const GLvoid *)byteOffset);
+        }
+      }
+      //=============== TANGENT ====================
+      {
+        const auto iterator = primitive.attributes.find("TANGENT");
+        if (iterator !=
+            end(primitive
+                    .attributes)) { // If "POSITION" has been found in the map
+          // (*iterator).first is the key "POSITION", (*iterator).second is the
+          // value, ie. the index of the accessor for this attribute
+          const auto accessorIdx = (*iterator).second;
+          const auto &accessor = model.accessors[accessorIdx];
+          const auto &bufferView = model.bufferViews[accessor.bufferView];
+          const auto bufferIdx = bufferView.buffer;
+
+          const auto bufferObject = bufferObjects[bufferIdx];
+
+          glEnableVertexAttribArray(
+              VERTEX_ATTRIB_TANGENT_IDX); // Enable array
+          glBindBuffer(GL_ARRAY_BUFFER,
+              bufferObject); // Bind the buffer object to GL_ARRAY_BUFFER
+
+          const auto byteOffset = accessor.byteOffset + bufferView.byteOffset;
+          ; // Compute the total byte offset using the accessor and the buffer
+            // view
+          glVertexAttribPointer(VERTEX_ATTRIB_TANGENT_IDX, accessor.type,
               accessor.componentType, GL_FALSE, GLsizei(bufferView.byteStride),
               (const GLvoid *)byteOffset);
         }

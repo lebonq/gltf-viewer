@@ -23,81 +23,18 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Fine tune shadow mapping">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Push Normal Mapping">
+      <change afterPath="$PROJECT_DIR$/src/shaders/bitangent.fs.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/shaders/normals_texture.fs.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/shaders/tangent.fs.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/ABeautifulGame.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/ABeautifulGame.gltf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Bishop_black_ORM.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Bishop_white_ORM.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Castle_ORM.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Castle_normal.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Chessboard_ORM.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/King_black_ORM.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/King_black_normal.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/King_white_ORM.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/King_white_normal.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Knight_ORM.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Knight_normal.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Pawn_ORM.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Pawn_normal.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Queen_black_ORM.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Queen_black_normal.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Queen_white_ORM.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Queen_white_normal.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/bishop_black_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/bishop_black_normal.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/bishop_white_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/bishop_white_normal.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/castle_black_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/castle_white_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/chessboard_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/chessboard_normal.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/king_black_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/king_white_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/knight_black_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/knight_white_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/pawn_black_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/pawn_white_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/queen_black_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/queen_white_base_color.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/screenshot/screenshot-babylonjs.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/screenshot/screenshot-threejs.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/screenshot/screenshot.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Binary/Avocado.glb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Draco/Avocado.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Draco/Avocado.gltf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Draco/Avocado_baseColor.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Draco/Avocado_normal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Draco/Avocado_roughnessMetallic.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Quantized/Avocado.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Quantized/Avocado.gltf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Quantized/Avocado_baseColor.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Quantized/Avocado_normal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Quantized/Avocado_roughnessMetallic.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF/Avocado.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF/Avocado.gltf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF/Avocado_baseColor.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF/Avocado_normal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF/Avocado_roughnessMetallic.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/screenshot/screenshot.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Binary/WaterBottle.glb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Draco/WaterBottle.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Draco/WaterBottle.gltf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Draco/WaterBottle_baseColor.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Draco/WaterBottle_emissive.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Draco/WaterBottle_normal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Draco/WaterBottle_occlusionRoughnessMetallic.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF/WaterBottle.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF/WaterBottle.gltf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF/WaterBottle_baseColor.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF/WaterBottle_emissive.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF/WaterBottle_normal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF/WaterBottle_occlusionRoughnessMetallic.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/screenshot/screenshot.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Data.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Data.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ViewerApplication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shaders/forward.vs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/forward.vs.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shaders/normals.fs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/normals.fs.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shaders/pbr_directional_light_shadows.fs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/pbr_directional_light_shadows.fs.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shaders/shadowMapShader.vs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/shadowMapShader.vs.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/shaders.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/shaders.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +53,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="normal-mapping" />
+        <entry key="$PROJECT_DIR$" value="shadow-mapping" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -132,27 +69,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Git.Branch.Popup.ShowAllRemotes&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;ToolWindowDebug.ShowToolbar&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;cf.advertisement.text.overridden&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/lebonq/Documents/M2-Image/Geometrie-Projective/projet/project_4D_fractal&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Git.Branch.Popup.ShowAllRemotes": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "ToolWindowDebug.ShowToolbar": "false",
+    "WebServerToolWindowFactoryState": "false",
+    "cf.advertisement.text.overridden": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "last_opened_file_path": "/home/lebonq/CLionProjects/gltf-viewer/src/shaders",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "vcs.Git",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/shaders" />
@@ -161,7 +98,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.Render  Avocado">
+  <component name="RunManager" selected="CMake Application.View Helmet">
     <configuration name="Render  Avocado" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/Avocado/glTF/Avocado.gltf --lookat -0.00332791,0.0428359,0.0799262,0,0.0314002,-4.65661e-10,0.00588725,0.989936,-0.141394 --output Avocado.png --w 3000 --h 2000" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -208,6 +145,11 @@
       </method>
     </configuration>
     <configuration name="View WaterBottle" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/WaterBottle/glTF/WaterBottle.gltf --lookat -0.311057,0.073679,-0.123156,0,0,0,0.199975,0.976597,0.0791756" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -380,7 +322,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679436721139</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Push Normal Mapping">
+      <created>1679822128441</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1679822128441</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -409,6 +358,7 @@
     <MESSAGE value="Some bug fix" />
     <MESSAGE value="Working Shadow Map" />
     <MESSAGE value="Fine tune shadow mapping" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fine tune shadow mapping" />
+    <MESSAGE value="Push Normal Mapping" />
+    <option name="LAST_COMMIT_MESSAGE" value="Push Normal Mapping" />
   </component>
 </project>

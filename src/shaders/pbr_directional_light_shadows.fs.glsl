@@ -10,6 +10,8 @@ in vec3 vViewSpaceNormal;
 in vec2 vTexCoords;
 in vec4 vFragPosLightSpace;
 in vec3 vFragPos;
+in vec3 vTangents;
+in vec3 vBitengants;
 
 // Here we use vTexCoords but we should use vTexCoords1 or vTexCoords2 depending
 // on the material because glTF can handle two texture coordinates sets per
@@ -30,10 +32,12 @@ uniform sampler2D uBaseColorTexture;
 uniform sampler2D uMetallicRoughnessTexture;
 uniform sampler2D uEmissiveTexture;
 uniform sampler2D uOcclusionTexture;
-
 uniform sampler2D uDirLightShadowMap;
+uniform sampler2D uNormalTexture;
 
 uniform int uApplyOcclusion;
+
+uniform float uNormalScale;
 
 out vec3 fColor;
 
@@ -66,7 +70,17 @@ vec4 SRGBtoLINEAR(vec4 srgbIn)
 // "f" must be multiplied by NdotL at the end.
 void main()
 {
-  vec3 N = normalize(vViewSpaceNormal);
+  vec3 N;
+    if((vTangents.x == 0.0 && vTangents.y == 0.0 && vTangents.z == 0.0) && (vBitengants.x == 0.0 && vBitengants.y == 0.0 && vBitengants.z == 0.0)){
+      N = normalize(vViewSpaceNormal);
+    }
+    else{
+      mat3 TBN = mat3(vTangents, vBitengants, vViewSpaceNormal);
+      vec3 N = TBN * normalize((texture(uNormalTexture, vTexCoords).rgb * 2.0 - 1.0) * vec3(uNormalScale, uNormalScale, 1.0f));
+      N = normalize(N);
+  }
+
+  //vec3
   vec3 V = normalize(-vViewSpacePosition);
   vec3 L = uLightDirection;
   vec3 H = normalize(L + V);
