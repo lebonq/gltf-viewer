@@ -39,6 +39,7 @@ int ViewerApplication::run()
           m_ShadersRootPath / "normals.fs.glsl"});
   m_glslProgram_normalRender.setUniform();
 
+
   m_glslProgram_noShadow =
       compileProgram({m_ShadersRootPath / "shadowMapShader.vs.glsl",
           m_ShadersRootPath / "pbr_directional_light.fs.glsl"});
