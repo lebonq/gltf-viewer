@@ -52,6 +52,8 @@ int ViewerApplication::run()
   m_glslProgram_shadowMapRendered = &m_glslProgram_shadowMap;
   m_glslProgram_rendered = &m_glslProgram_fullRender;
 
+
+
   glm::vec3 lightDir = glm::vec3(1.0f, 1.0f, 1.0f);
   {
     const auto sinPhi = glm::sin(lightPhi);
@@ -506,19 +508,23 @@ int ViewerApplication::run()
         if (renderTypeChanged) {
           if (renderType == 0) {
             m_glslProgram_rendered = &m_glslProgram_fullRender;
+            m_glslProgram_rendered->use();
             renderShadow = true;
 
           } else if (renderType == 1) {
             m_glslProgram_rendered = &m_glslProgram_normalRender;
+            m_glslProgram_rendered->use();
             renderShadow = false;
 
           } else if (renderType == 2) {
             m_glslProgram_rendered = &m_glslProgram_noShadow;
+            m_glslProgram_rendered->use();
             renderShadow = false;
 
           }
           else if (renderType == 3) {
             m_glslProgram_rendered = &m_glslProgram_debugShadowMap;
+            m_glslProgram_rendered->use();
             renderShadow = true;
           }
         }
