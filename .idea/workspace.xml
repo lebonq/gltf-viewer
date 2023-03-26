@@ -23,13 +23,88 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Fine tune shadow mapping" />
+    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Fine tune shadow mapping">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/ABeautifulGame.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/ABeautifulGame.gltf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Bishop_black_ORM.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Bishop_white_ORM.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Castle_ORM.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Castle_normal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Chessboard_ORM.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/King_black_ORM.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/King_black_normal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/King_white_ORM.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/King_white_normal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Knight_ORM.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Knight_normal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Pawn_ORM.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Pawn_normal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Queen_black_ORM.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Queen_black_normal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Queen_white_ORM.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/Queen_white_normal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/bishop_black_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/bishop_black_normal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/bishop_white_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/bishop_white_normal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/castle_black_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/castle_white_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/chessboard_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/chessboard_normal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/king_black_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/king_white_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/knight_black_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/knight_white_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/pawn_black_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/pawn_white_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/queen_black_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/glTF/queen_white_base_color.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/screenshot/screenshot-babylonjs.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/screenshot/screenshot-threejs.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/ABeautifulGame/screenshot/screenshot.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Binary/Avocado.glb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Draco/Avocado.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Draco/Avocado.gltf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Draco/Avocado_baseColor.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Draco/Avocado_normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Draco/Avocado_roughnessMetallic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Quantized/Avocado.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Quantized/Avocado.gltf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Quantized/Avocado_baseColor.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Quantized/Avocado_normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF-Quantized/Avocado_roughnessMetallic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF/Avocado.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF/Avocado.gltf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF/Avocado_baseColor.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF/Avocado_normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/glTF/Avocado_roughnessMetallic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/Avocado/screenshot/screenshot.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Binary/WaterBottle.glb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Draco/WaterBottle.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Draco/WaterBottle.gltf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Draco/WaterBottle_baseColor.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Draco/WaterBottle_emissive.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Draco/WaterBottle_normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF-Draco/WaterBottle_occlusionRoughnessMetallic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF/WaterBottle.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF/WaterBottle.gltf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF/WaterBottle_baseColor.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF/WaterBottle_emissive.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF/WaterBottle_normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/glTF/WaterBottle_occlusionRoughnessMetallic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gltf-sample-models2/2.0/WaterBottle/screenshot/screenshot.jpg" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -41,7 +116,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="tutorial-v1" />
+        <entry key="$PROJECT_DIR$" value="normal-mapping" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -86,13 +161,43 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.View Sponza">
+  <component name="RunManager" selected="CMake Application.Render  Avocado">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Render  Avocado" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/Avocado/glTF/Avocado.gltf --lookat -0.00332791,0.0428359,0.0799262,0,0.0314002,-4.65661e-10,0.00588725,0.989936,-0.141394 --output Avocado.png --w 3000 --h 2000" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Render ABG" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/ABeautifulGame/glTF/ABeautifulGame.gltf --lookat 0.470957,0.26103,0.319238,-0.158447,-0.0374414,-0.132236,-0.29217,0.933121,-0.209575 --output ABG.png --w 3000 --h 2000" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Render Helmet" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf --lookat 0,0,2.29362,0,-0.0898785,1.29767,0,0.995953,-0.0898785 --output helmet.png --w 3000 --h 2000" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration name="Render Sponza" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/Sponza/glTF/Sponza.gltf --lookat 0.926627,4.73407,0.16938,-0.0712768,4.70099,0.113776,-0.0330304,0.999454,-0.00183996 --output sponza.png --w 3000 --h 2000" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Render WaterBottle" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/WaterBottle/glTF/WaterBottle.gltf --lookat -0.311057,0.073679,-0.123156,0,0,0,0.199975,0.976597,0.0791756 --output WaterBottle.png --w 3000 --h 2000" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="View  Avocado" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/Avocado/glTF/Avocado.gltf --lookat -0.00332791,0.0428359,0.0799262,0,0.0314002,-4.65661e-10,0.00588725,0.989936,-0.141394" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="View ABG" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/ABeautifulGame/glTF/ABeautifulGame.gltf --lookat 0.470957,0.26103,0.319238,-0.158447,-0.0374414,-0.132236,-0.29217,0.933121,-0.209575" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -107,7 +212,7 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="View WaterBottle" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/WaterBottle/glTF/WaterBottle.gltf --lookat -0.311057,0.073679,-0.123156,0,0,0,0.199975,0.976597,0.0791756" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -125,8 +230,14 @@
     <list>
       <item itemvalue="CMake Application.Render Helmet" />
       <item itemvalue="CMake Application.Render Sponza" />
+      <item itemvalue="CMake Application.Render ABG" />
+      <item itemvalue="CMake Application.Render WaterBottle" />
+      <item itemvalue="CMake Application.Render  Avocado" />
       <item itemvalue="CMake Application.View Helmet" />
       <item itemvalue="CMake Application.View Sponza" />
+      <item itemvalue="CMake Application.View ABG" />
+      <item itemvalue="CMake Application.View WaterBottle" />
+      <item itemvalue="CMake Application.View  Avocado" />
       <item itemvalue="CMake Application.uninstall" />
       <item itemvalue="CMake Application.glfw" />
     </list>
