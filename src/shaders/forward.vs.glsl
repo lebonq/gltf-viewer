@@ -10,6 +10,7 @@ out vec3 vViewSpaceNormal;
 out vec2 vTexCoords;
 out vec3 vTangents;
 out vec3 vBitengants;
+out mat4 vModelMatrix;
 
 uniform mat4 uViewMatrix;
 uniform mat4 uModelMatrix;
@@ -23,7 +24,19 @@ void main()
     vViewSpacePosition = vec3(vModelViewMatrix * vec4(aPosition, 1.));
 	vViewSpaceNormal = normalize(vec3(vNormalMatrix * vec4(aNormal, 0.)));
 	vTexCoords = aTexCoords;
-    vTangents = normalize(vec3(uModelMatrix * aTangent));
-    vBitengants = cross(vViewSpaceNormal, vTangents) * aTangent.w;
+
+    if(aTangent.x == 0.0 && aTangent.y == 0.0 && aTangent.z == 0.0)
+    {
+        vTangents = vec3(0.0, 0.0, 0.0);
+        vBitengants = vec3(0.0, 0.0, 0.0);
+    }
+    else
+    {
+        vTangents = normalize(vec3(uModelMatrix * aTangent));
+        vBitengants = cross(vViewSpaceNormal, vTangents) * aTangent.w;
+    }
+
+    vModelMatrix = uModelMatrix; // For tangent space normal mapping
+
     gl_Position =  vModelViewProjMatrix * vec4(aPosition, 1.);
 }

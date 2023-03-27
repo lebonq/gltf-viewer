@@ -80,6 +80,7 @@ int ViewerApplication::run()
   bool lightFromCamera = false;
   bool applyOcclusion = true;
   bool renderShadow = true;
+  bool applyNormalTexture = true;
   bool shadowNeedUpdate = true;
 
   // Build projection matrix
@@ -371,6 +372,8 @@ int ViewerApplication::run()
           }
         };
 
+    if(shader->m_applyNormalMapping >= 0)
+      glUniform1i(shader->m_applyNormalMapping, applyNormalTexture);
     // Draw the scene referenced by gltf file
     if (model.defaultScene >= 0) {
       for (auto node : model.scenes[model.defaultScene].nodes) {
@@ -535,6 +538,7 @@ int ViewerApplication::run()
       }
       ImGui::Checkbox("light from camera", &lightFromCamera);
       ImGui::Checkbox("apply occlusion", &applyOcclusion);
+      ImGui::Checkbox("apply normal map", &applyNormalTexture);
       if (ImGui::CollapsingHeader("Shadow Option")) {
         if(ImGui::SliderInt("Shadow Resolution", &SHADOW_RES, 128, 4096*3)){
           glDeleteFramebuffers(1,&m_depthMapFBO);

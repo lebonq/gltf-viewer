@@ -152,6 +152,7 @@ public:
   GLint m_uNormalTexture;
   GLint m_uNormalScale;
   GLint m_uHasNormalMap;
+  GLint m_applyNormalMapping;
 
   GLProgram() : m_GLId(glCreateProgram()) { }
 
@@ -234,6 +235,7 @@ public:
     m_uNormalTexture = getUniformLocation("uNormalTexture");
     m_uNormalScale = getUniformLocation("uNormalScale");
     m_uHasNormalMap = getUniformLocation("uHasNormalMap");
+    m_applyNormalMapping = getUniformLocation("uApplyNormalMapping");
   }
 
   GLint getAttribLocation(const GLchar *name) const

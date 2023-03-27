@@ -1,4 +1,4 @@
-#version 440 core
+#version 330 core
 
 // A reference implementation can be found here:
 // https://github.com/KhronosGroup/glTF-Sample-Viewer/blob/master/src/shaders/metallic-roughness.frag
@@ -29,6 +29,7 @@ uniform float uMetallicFactor;
 uniform float uRoughnessFactor;
 uniform vec3 uEmissiveFactor;
 uniform float uOcclusionStrength;
+uniform int uApplyNormalMapping;
 
 uniform sampler2D uBaseColorTexture;
 uniform sampler2D uMetallicRoughnessTexture;
@@ -93,26 +94,26 @@ void main()
 {
   vec3 N;
 
-    //If model has no normal map
-    if(uHasNormalMap == 0){
-        N = vViewSpaceNormal;
+  //If model has no normal map
+  if(uHasNormalMap == 0 || uApplyNormalMapping == 0){
+    N = vViewSpaceNormal;
+    N = normalize(N);
+  }
+  else{
+    //Compute tangent if nor precomputed
+    if((vTangents.x == 0.0 && vTangents.y == 0.0 && vTangents.z == 0.0) && (vBitengants.x == 0.0 && vBitengants.y == 0.0 && vBitengants.z == 0.0)){
+      vec4 T = computeTangent(vViewSpacePosition, vViewSpaceNormal, vTexCoords);
+      vec3 T_space = normalize(vec3(vModelMatrix * T));
+      vec3 B = cross(vViewSpaceNormal, T_space) * T.w;
+      mat3 TBN = mat3(T_space, B, vViewSpaceNormal);
+      N = TBN * normalize((texture(uNormalTexture, vTexCoords).rgb * 2.0 - 1.0) * vec3(uNormalScale, uNormalScale, 1.0f));
       N = normalize(N);
     }
     else{
-      //Compute tangent if nor precomputed
-      if((vTangents.x == 0.0 && vTangents.y == 0.0 && vTangents.z == 0.0) && (vBitengants.x == 0.0 && vBitengants.y == 0.0 && vBitengants.z == 0.0)){
-        vec4 T = computeTangent(vViewSpacePosition, vViewSpaceNormal, vTexCoords);
-        vec3 T_space = normalize(vec3(vModelMatrix * T));
-        vec3 B = cross(vViewSpaceNormal, T_space) * T.w;
-        mat3 TBN = mat3(T_space, B, vViewSpaceNormal);
-        N = TBN * normalize((texture(uNormalTexture, vTexCoords).rgb * 2.0 - 1.0) * vec3(uNormalScale, uNormalScale, 1.0f));
-        N = normalize(N);
-      }
-      else{
-        mat3 TBN = mat3(vTangents, vBitengants, vViewSpaceNormal);
-        vec3 N = TBN * normalize((texture(uNormalTexture, vTexCoords).rgb * 2.0 - 1.0) * vec3(uNormalScale, uNormalScale, 1.0f));
-        N = normalize(N);
-      }
+      mat3 TBN = mat3(vTangents, vBitengants, vViewSpaceNormal);
+      N = TBN * normalize((texture(uNormalTexture, vTexCoords).rgb * 2.0 - 1.0) * vec3(uNormalScale, uNormalScale, 1.0f));
+      N = normalize(N);
+    }
   }
 
   //vec3
