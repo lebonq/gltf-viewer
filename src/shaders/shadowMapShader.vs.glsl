@@ -13,10 +13,13 @@ out vec3 vFragPos;
 out vec3 vTangents;
 out vec3 vBitengants;
 
+out mat4 vModelMatrix;
+
 uniform mat4 uViewMatrix;
 uniform mat4 uModelMatrix;
 uniform mat4 uProjectionMatrix;
 uniform mat4 uLightSpaceMatrix;
+
 
 void main()
 {
@@ -42,6 +45,8 @@ void main()
         vTangents = normalize(vec3(uModelMatrix * aTangent));
         vBitengants = cross(vViewSpaceNormal, vTangents) * aTangent.w;
     }
+
+    vModelMatrix = uModelMatrix; // For tangent space normal mapping
 
     gl_Position =  vModelViewProjMatrix * vec4(aPosition, 1.);
 }

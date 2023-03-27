@@ -50,6 +50,19 @@ int ViewerApplication::run()
           m_ShadersRootPath / "debug.fs.glsl"});
   m_glslProgram_debugShadowMap.setUniform();
 
+  m_glslProgram_tangent =
+      compileProgram({m_ShadersRootPath / "forward.vs.glsl",
+          m_ShadersRootPath / "tangent.fs.glsl"});
+  m_glslProgram_tangent.setUniform();
+
+  m_glslProgram_bitangent  =    compileProgram({m_ShadersRootPath / "forward.vs.glsl",
+      m_ShadersRootPath / "bitangent.fs.glsl"});
+  m_glslProgram_bitangent.setUniform();
+
+  m_glslProgram_normalTexture = compileProgram({m_ShadersRootPath / "forward.vs.glsl",
+      m_ShadersRootPath / "normals_texture.fs.glsl"});
+  m_glslProgram_normalTexture.setUniform();
+
   m_glslProgram_shadowMapRendered = &m_glslProgram_shadowMap;
   m_glslProgram_rendered = &m_glslProgram_fullRender;
 
@@ -151,7 +164,7 @@ int ViewerApplication::run()
         if (pbrMetallicRoughness.baseColorTexture.index >= 0) {
           const auto &texture =
               model.textures[pbrMetallicRoughness.baseColorTexture.index];
-          if (texture.source >= 0) {
+          if (pbrMetallicRoughness.baseColorTexture.index >= 0) {
             textureObject = textureObjects[pbrMetallicRoughness.baseColorTexture.index];
           }
         }
@@ -174,7 +187,8 @@ int ViewerApplication::run()
           const auto &texture =
               model.textures[pbrMetallicRoughness.metallicRoughnessTexture
                                  .index];
-          if (texture.source >= 0) {
+          if (pbrMetallicRoughness.metallicRoughnessTexture
+                  .index >= 0) {
             textureObject = textureObjects[pbrMetallicRoughness.metallicRoughnessTexture
                                                .index];
           }
@@ -193,7 +207,7 @@ int ViewerApplication::run()
         auto textureObject = 0u;
         if (material.emissiveTexture.index >= 0) {
           const auto &texture = model.textures[material.emissiveTexture.index];
-          if (texture.source >= 0) {
+          if (material.emissiveTexture.index >= 0) {
             textureObject = textureObjects[material.emissiveTexture.index];
           }
         }
@@ -210,7 +224,7 @@ int ViewerApplication::run()
         auto textureObject = whiteTexture;
         if (material.occlusionTexture.index >= 0) {
           const auto &texture = model.textures[material.occlusionTexture.index];
-          if (texture.source >= 0) {
+          if (material.occlusionTexture.index >= 0) {
             textureObject = textureObjects[material.occlusionTexture.index];
           }
         }
@@ -223,10 +237,17 @@ int ViewerApplication::run()
         auto textureObject = whiteTexture;
         if (material.normalTexture.index >= 0) {
           const auto &texture = model.textures[material.normalTexture.index];
-          if (texture.source >= 0) {
+          if (material.normalTexture.index >= 0) {
+            m_modelHasNormals = 1;
+            glUniform1i(m_glslProgram_rendered->m_uHasNormalMap, m_modelHasNormals);
             textureObject = textureObjects[material.normalTexture.index];
           }
+          else{
+            m_modelHasNormals = 0;
+            glUniform1i(m_glslProgram_rendered->m_uHasNormalMap, m_modelHasNormals);
+          }
         }
+
 
         glActiveTexture(GL_TEXTURE5);//4 is for shadow map
         glBindTexture(GL_TEXTURE_2D, textureObject);
@@ -528,7 +549,10 @@ int ViewerApplication::run()
             ImGui::RadioButton("Full Render", &renderType, 0) ||
             ImGui::RadioButton("Normal render", &renderType, 1) ||
             ImGui::RadioButton("No shadow", &renderType, 2)||
-            ImGui::RadioButton("Shadow Map Render", &renderType, 3);
+            ImGui::RadioButton("Shadow Map Render", &renderType, 3) ||
+            ImGui::RadioButton("Tangent Render", &renderType, 4) ||
+            ImGui::RadioButton("Bitangent Render", &renderType, 5) ||
+            ImGui::RadioButton("Normal Texture Render", &renderType, 6);
         if (renderTypeChanged) {
           if (renderType == 0) {
             m_glslProgram_rendered = &m_glslProgram_fullRender;
@@ -550,6 +574,21 @@ int ViewerApplication::run()
             m_glslProgram_rendered = &m_glslProgram_debugShadowMap;
             m_glslProgram_rendered->use();
             renderShadow = true;
+          }
+          else if (renderType == 4) {
+                m_glslProgram_rendered = &m_glslProgram_tangent;
+                m_glslProgram_rendered->use();
+                renderShadow = false;
+          }
+          else if (renderType == 5) {
+                m_glslProgram_rendered = &m_glslProgram_bitangent;
+                m_glslProgram_rendered->use();
+                renderShadow = false;
+          }
+          else if (renderType == 6) {
+                m_glslProgram_rendered = &m_glslProgram_normalTexture;
+                m_glslProgram_rendered->use();
+                renderShadow = false;
           }
         }
       }

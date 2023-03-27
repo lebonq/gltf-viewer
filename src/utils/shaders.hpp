@@ -151,6 +151,7 @@ public:
   GLint m_uDirLightShadowMap;
   GLint m_uNormalTexture;
   GLint m_uNormalScale;
+  GLint m_uHasNormalMap;
 
   GLProgram() : m_GLId(glCreateProgram()) { }
 
@@ -232,6 +233,7 @@ public:
     m_uDirLightShadowMap = getUniformLocation("uDirLightShadowMap");
     m_uNormalTexture = getUniformLocation("uNormalTexture");
     m_uNormalScale = getUniformLocation("uNormalScale");
+    m_uHasNormalMap = getUniformLocation("uHasNormalMap");
   }
 
   GLint getAttribLocation(const GLchar *name) const

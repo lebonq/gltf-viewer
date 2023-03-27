@@ -44,6 +44,7 @@ private:
 
   glm::vec3 m_bboxMin, m_bboxMax;
 
+  int m_modelHasNormals = 1;
   bool m_hasUserCamera = false;
   Camera m_userCamera;
 
@@ -63,6 +64,9 @@ private:
   GLProgram m_glslProgram_normalRender;
   GLProgram m_glslProgram_noShadow;
   GLProgram m_glslProgram_debugShadowMap;
+  GLProgram m_glslProgram_tangent;
+  GLProgram m_glslProgram_bitangent;
+  GLProgram m_glslProgram_normalTexture;
 
   glm::mat4 m_lightSpaceMatrix;
 

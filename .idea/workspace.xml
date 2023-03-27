@@ -23,15 +23,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Push Normal Mapping">
-      <change afterPath="$PROJECT_DIR$/src/shaders/bitangent.fs.glsl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/shaders/normals_texture.fs.glsl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/shaders/tangent.fs.glsl" afterDir="false" />
+    <list default="true" id="19de7924-f124-4159-82f0-f1cbf3d8c564" name="Changes" comment="Push Working normalmapping">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Data.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Data.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ViewerApplication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shaders/forward.vs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/forward.vs.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shaders/normals.fs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/normals.fs.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ViewerApplication.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ViewerApplication.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/shaders/pbr_directional_light_shadows.fs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/pbr_directional_light_shadows.fs.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/shaders/shadowMapShader.vs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/shaders/shadowMapShader.vs.glsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/shaders.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/shaders.hpp" afterDir="false" />
@@ -41,7 +37,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -86,7 +82,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "vcs.Git",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -98,7 +94,12 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.View Helmet">
+  <component name="RunManager" selected="CMake Application.View Sponza">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Render  Avocado" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/Avocado/glTF/Avocado.gltf --lookat -0.00332791,0.0428359,0.0799262,0,0.0314002,-4.65661e-10,0.00588725,0.989936,-0.141394 --output Avocado.png --w 3000 --h 2000" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -124,6 +125,11 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Rener Suzanne" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/Suzanne/glTF/Suzanne.gltf --output Suzanne.png --w 3000 --h 2000" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="View  Avocado" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/Avocado/glTF/Avocado.gltf --lookat -0.00332791,0.0428359,0.0799262,0,0.0314002,-4.65661e-10,0.00588725,0.989936,-0.141394" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -144,12 +150,12 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="View WaterBottle" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/WaterBottle/glTF/WaterBottle.gltf --lookat -0.311057,0.073679,-0.123156,0,0,0,0.199975,0.976597,0.0791756" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
+    <configuration name="View Suzanne" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/Suzanne/glTF/Suzanne.gltf" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="View WaterBottle" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="viewer ../../gltf-sample-models/2.0/WaterBottle/glTF/WaterBottle.gltf --lookat -0.311057,0.073679,-0.123156,0,0,0,0.199975,0.976597,0.0791756" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="gltf-viewer" TARGET_NAME="gltf-viewer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="gltf-viewer" RUN_TARGET_NAME="gltf-viewer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -170,9 +176,11 @@
       <item itemvalue="CMake Application.Render ABG" />
       <item itemvalue="CMake Application.Render WaterBottle" />
       <item itemvalue="CMake Application.Render  Avocado" />
+      <item itemvalue="CMake Application.Rener Suzanne" />
       <item itemvalue="CMake Application.View Helmet" />
       <item itemvalue="CMake Application.View Sponza" />
       <item itemvalue="CMake Application.View ABG" />
+      <item itemvalue="CMake Application.View Suzanne" />
       <item itemvalue="CMake Application.View WaterBottle" />
       <item itemvalue="CMake Application.View  Avocado" />
       <item itemvalue="CMake Application.uninstall" />
@@ -223,6 +231,7 @@
       <workItem from="1679436875596" duration="10000" />
       <workItem from="1679602346933" duration="51000" />
       <workItem from="1679694660761" duration="19000" />
+      <workItem from="1679902463245" duration="3870000" />
     </task>
     <task id="LOCAL-00001" summary="Add loadGltf and createBufferObjects">
       <created>1673517456196</created>
@@ -329,7 +338,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679822128441</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Push Working normalmapping">
+      <created>1679844089704</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1679844089704</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -359,6 +375,7 @@
     <MESSAGE value="Working Shadow Map" />
     <MESSAGE value="Fine tune shadow mapping" />
     <MESSAGE value="Push Normal Mapping" />
-    <option name="LAST_COMMIT_MESSAGE" value="Push Normal Mapping" />
+    <MESSAGE value="Push Working normalmapping" />
+    <option name="LAST_COMMIT_MESSAGE" value="Push Working normalmapping" />
   </component>
 </project>

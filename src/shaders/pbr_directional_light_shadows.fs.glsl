@@ -1,4 +1,4 @@
-#version 330 core
+#version 440 core
 
 // A reference implementation can be found here:
 // https://github.com/KhronosGroup/glTF-Sample-Viewer/blob/master/src/shaders/metallic-roughness.frag
@@ -12,6 +12,8 @@ in vec4 vFragPosLightSpace;
 in vec3 vFragPos;
 in vec3 vTangents;
 in vec3 vBitengants;
+
+in mat4 vModelMatrix;
 
 // Here we use vTexCoords but we should use vTexCoords1 or vTexCoords2 depending
 // on the material because glTF can handle two texture coordinates sets per
@@ -38,6 +40,7 @@ uniform sampler2D uNormalTexture;
 uniform int uApplyOcclusion;
 
 uniform float uNormalScale;
+uniform int uHasNormalMap;
 
 out vec3 fColor;
 
@@ -63,6 +66,24 @@ vec4 SRGBtoLINEAR(vec4 srgbIn)
   return vec4(pow(srgbIn.xyz, vec3(GAMMA)), srgbIn.w);
 }
 
+vec4 computeTangent(vec3 position, vec3 normal, vec2 texCoord)
+{
+  vec3 dp1 = dFdx(position);
+  vec3 dp2 = dFdy(position);
+  vec2 duv1 = dFdx(texCoord);
+  vec2 duv2 = dFdy(texCoord);
+
+  // Solve the linear system of equations to get the tangent and bitangent vectors
+  vec3 tangent = normalize(dp2 * duv1.y - dp1 * duv2.y);
+  vec3 bitangent = normalize(dp1 * duv2.x - dp2 * duv1.x);
+
+  // Calculate the handedness of the tangent basis
+  vec3 tangentCrossBitangent = cross(tangent, bitangent);
+  float handedness = (dot(tangentCrossBitangent, normal) < 0.0) ? -1.0 : 1.0;
+
+  return vec4(tangent, handedness);
+}
+
 // The model is mathematically described here
 // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#appendix-b-brdf-implementation
 // We try to use the same or similar names for variables
@@ -71,13 +92,27 @@ vec4 SRGBtoLINEAR(vec4 srgbIn)
 void main()
 {
   vec3 N;
-    if((vTangents.x == 0.0 && vTangents.y == 0.0 && vTangents.z == 0.0) && (vBitengants.x == 0.0 && vBitengants.y == 0.0 && vBitengants.z == 0.0)){
-      N = normalize(vViewSpaceNormal);
+
+    //If model has no normal map
+    if(uHasNormalMap == 0){
+        N = vViewSpaceNormal;
+      N = normalize(N);
     }
     else{
-      mat3 TBN = mat3(vTangents, vBitengants, vViewSpaceNormal);
-      vec3 N = TBN * normalize((texture(uNormalTexture, vTexCoords).rgb * 2.0 - 1.0) * vec3(uNormalScale, uNormalScale, 1.0f));
-      N = normalize(N);
+      //Compute tangent if nor precomputed
+      if((vTangents.x == 0.0 && vTangents.y == 0.0 && vTangents.z == 0.0) && (vBitengants.x == 0.0 && vBitengants.y == 0.0 && vBitengants.z == 0.0)){
+        vec4 T = computeTangent(vViewSpacePosition, vViewSpaceNormal, vTexCoords);
+        vec3 T_space = normalize(vec3(vModelMatrix * T));
+        vec3 B = cross(vViewSpaceNormal, T_space) * T.w;
+        mat3 TBN = mat3(T_space, B, vViewSpaceNormal);
+        N = TBN * normalize((texture(uNormalTexture, vTexCoords).rgb * 2.0 - 1.0) * vec3(uNormalScale, uNormalScale, 1.0f));
+        N = normalize(N);
+      }
+      else{
+        mat3 TBN = mat3(vTangents, vBitengants, vViewSpaceNormal);
+        vec3 N = TBN * normalize((texture(uNormalTexture, vTexCoords).rgb * 2.0 - 1.0) * vec3(uNormalScale, uNormalScale, 1.0f));
+        N = normalize(N);
+      }
   }
 
   //vec3
