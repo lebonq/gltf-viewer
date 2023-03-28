@@ -437,6 +437,7 @@ int ViewerApplication::run()
     glUniform1i(m_glslProgram_rendered->m_uDirLightShadowMap, 4);
 
     glViewport(0, 0, m_nWindowWidth, m_nWindowHeight);
+    glClearColor(0.529, 0.808, 0.922,1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     drawScene(viewMatrix, m_glslProgram_rendered);
   };

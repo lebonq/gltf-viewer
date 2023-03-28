@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <iostream>
 
-void renderToImage(size_t width, size_t height, size_t numComponents,
+void renderToImage(std::size_t width, std::size_t height, std::size_t numComponents,
     unsigned char *outPixels, std::function<void()> render, std::function<void()> computeShadows)
 {
   computeShadows(); //we move render shadows to a separate function

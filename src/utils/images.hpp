@@ -4,20 +4,20 @@
 
 template <typename ComponentType>
 void flipImageYAxis(
-    size_t width, size_t height, size_t numComponent, ComponentType *pixels)
+    std::size_t width, std::size_t height, std::size_t numComponent, ComponentType *pixels)
 {
   auto *pFirstLine = pixels;
   auto *pLastLine = pixels + (height - 1) * width * numComponent;
 
   while (pFirstLine < pLastLine) {
-    for (size_t x = 0; x < width * numComponent; ++x)
+    for (std::size_t x = 0; x < width * numComponent; ++x)
       std::swap(pFirstLine[x], pLastLine[x]);
     pFirstLine += width * numComponent;
     pLastLine -= width * numComponent;
   }
 }
 
-void renderToImage(size_t width, size_t height, size_t numComponents,
+void renderToImage(std::size_t width, std::size_t height, std::size_t numComponents,
     unsigned char *outPixels, std::function<void()> render, std::function<void()> computeShadows);
 // Setup GL state in order to render in texture, call drawScene() then get the
 // texture from the GPU and store it on outPixels[0 : width * height *
