@@ -9,7 +9,7 @@ in vec3 vBitengants;
 in mat4 vModelMatrix;
 
 out vec3 fColor;
-
+//free;y inspired from here http://www.thetenthplanet.de/archives/1180
 vec4 computeTangent(vec3 position, vec3 normal, vec2 texCoord)
 {
   vec3 dp1 = dFdx(position);

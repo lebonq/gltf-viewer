@@ -67,6 +67,7 @@ vec4 SRGBtoLINEAR(vec4 srgbIn)
   return vec4(pow(srgbIn.xyz, vec3(GAMMA)), srgbIn.w);
 }
 
+//free;y inspired from here http://www.thetenthplanet.de/archives/1180
 vec4 computeTangent(vec3 position, vec3 normal, vec2 texCoord)
 {
   vec3 dp1 = dFdx(position);
