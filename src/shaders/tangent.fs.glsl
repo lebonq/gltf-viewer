@@ -9,23 +9,20 @@ in vec3 vBitengants;
 in mat4 vModelMatrix;
 
 out vec3 fColor;
-//free;y inspired from here http://www.thetenthplanet.de/archives/1180
-vec4 computeTangent(vec3 position, vec3 normal, vec2 texCoord)
+//stolen from here http://www.thetenthplanet.de/archives/1180
+vec3 computeTangent(vec3 position, vec3 normal, vec2 texCoord)
 {
-  vec3 dp1 = dFdx(position);
-  vec3 dp2 = dFdy(position);
-  vec2 duv1 = dFdx(texCoord);
-  vec2 duv2 = dFdy(texCoord);
+    vec3 dp1 = dFdx(position);
+    vec3 dp2 = dFdy(position);
+    vec2 duv1 = dFdx(texCoord);
+    vec2 duv2 = dFdy(texCoord);
 
-  // Solve the linear system of equations to get the tangent and bitangent vectors
-  vec3 tangent = normalize(dp2 * duv1.y - dp1 * duv2.y);
-  vec3 bitangent = normalize(dp1 * duv2.x - dp2 * duv1.x);
+    // solve the linear system
+    vec3 dp2perp = cross( dp2, normal );
+    vec3 dp1perp = cross( normal, dp1 );
+    vec3 tangent = dp2perp * duv1.x + dp1perp * duv2.x;
 
-  // Calculate the handedness of the tangent basis
-  vec3 tangentCrossBitangent = cross(tangent, bitangent);
-  float handedness = (dot(tangentCrossBitangent, normal) < 0.0) ? -1.0 : 1.0;
-
-  return vec4(tangent, handedness);
+    return tangent;
 }
 
 void main()
@@ -33,9 +30,9 @@ void main()
   vec3 N;
    //Compute tangent if nor precomputed
       if((vTangents.x == 0.0 && vTangents.y == 0.0 && vTangents.z == 0.0) && (vBitengants.x == 0.0 && vBitengants.y == 0.0 && vBitengants.z == 0.0)){
-        vec4 T = computeTangent(vViewSpacePosition, vViewSpaceNormal, vTexCoords);
-        vec3 T_space = normalize(vec3(vModelMatrix * T));
-        vec3 B = cross(vViewSpaceNormal, T_space) * T.w;
+        vec3 T = computeTangent(vViewSpacePosition, vViewSpaceNormal, vTexCoords);
+        vec3 T_space = normalize(vec3(vModelMatrix * vec4(T,1.0)));
+        vec3 B = cross(vViewSpaceNormal, T_space) * -1.0;
         N = normalize(T_space);
       }
       else{
